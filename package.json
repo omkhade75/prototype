@@ -1,0 +1,11 @@
+{
+  "name": "orbit-ai-workspace",
+  "version": "1.0.0",
+  "description": "ORBIT AI — AI Engineering & Automation Workspace",
+  "scripts": {
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "test:backend": "cd backend && npm test",
+    "test": "node --test backend/tests/*.test.js"
+  }
+}
