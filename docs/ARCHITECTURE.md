@@ -134,17 +134,53 @@ sequenceDiagram
     Backend-->>Frontend: Return Final Workflow Output
 ```
 
+### Pathway 4: Bounded Agent Execution Loop (Ollama Native Tool Calling & Demo Mode)
+```mermaid
+sequenceDiagram
+    autonumber
+    actor User
+    participant Frontend as React Playground
+    participant Backend as Express API Gateway
+    participant AI as AgentExecutor (Python)
+    participant Ollama as Local Ollama Daemon (:11434)
+    participant Registry as Tool Registry
+    participant DB as SQLite DB
+
+    User->>Frontend: Enter prompt & select Provider (Ollama or Demo)
+    Frontend->>Backend: POST /api/agent/run {message, provider, maxSteps: 5}
+    Backend->>DB: INSERT agent_runs (status: 'running', provider)
+    Backend->>AI: POST /agent/run {message, chunks, provider, max_steps: 5}
+    alt Provider is Ollama
+        AI->>Ollama: POST /api/chat {model, messages, tools: [registry schemas]}
+        Ollama-->>AI: Assistant response with tool_calls: [{name, arguments}]
+        AI->>Registry: validate_args(tool_name, arguments)
+        AI->>Registry: execute_tool(tool_name, arguments, chunks)
+        Registry-->>AI: Observed execution result {passages / summary / quiz}
+        AI->>AI: Append step record to trace list
+        AI->>Ollama: POST /api/chat {messages + tool_call + {role: 'tool', content: ...}}
+        Ollama-->>AI: Final assistant synthesis answer
+    else Provider is Demo Mode
+        AI->>AI: Deterministic extraction & tool dispatch
+        AI->>Registry: execute_tool(tool_name, args, chunks)
+        AI-->>AI: Generate grounded response with citations
+    end
+    AI-->>Backend: Return {status, provider, model, steps, final_response}
+    Backend->>DB: INSERT agent_steps & UPDATE agent_runs (status, model, duration)
+    Backend-->>Frontend: HTTP 201 Full agent trace with thoughts, arguments, and latency
+```
+
 ---
 
 ## 4. SQLite Data Model
 
-| Table | Purpose | Primary Key | Key Relations |
+| Table | Purpose | Primary Key | Key Columns / Relations |
 | :--- | :--- | :--- | :--- |
-| `documents` | Ingested source files and status | `id` (INTEGER) | 1-to-many `document_chunks` |
-| `document_chunks` | Bounded text passages with page numbers | `id` (INTEGER) | Foreign key `document_id` (ON DELETE CASCADE) |
-| `agent_runs` | Agent session records and prompt | `id` (TEXT) | 1-to-many `agent_steps` |
-| `agent_steps` | Granular step traces (thought, tool, latency) | `id` (INTEGER) | Foreign key `run_id` (ON DELETE CASCADE) |
-| `workflow_definitions` | Visual node & edge DAG specifications | `id` (TEXT) | 1-to-many `workflow_runs` |
-| `workflow_runs` | Execution instances with status & approvals | `id` (TEXT) | Foreign key `workflow_id` |
-| `workflow_steps` | Individual node execution output and duration | `id` (INTEGER) | Foreign key `run_id` (ON DELETE CASCADE) |
-| `evaluations` | Deterministic benchmark test run results | `id` (TEXT) | Self-contained benchmark runs |
+| `documents` | Ingested source files and status | `id` (INTEGER) | `filename`, `file_type`, `file_size`, `chunk_count`, `status` |
+| `document_chunks` | Bounded text passages with page numbers | `id` (INTEGER) | `document_id` (FK), `content`, `page_number`, `token_count` |
+| `agent_runs` | Agent session records and prompt | `id` (TEXT) | `user_prompt`, `status`, `provider`, `model`, `duration_ms`, `total_steps` |
+| `agent_steps` | Granular step traces (thought, tool, latency) | `id` (INTEGER) | `run_id` (FK), `step_number`, `thought`, `tool_name`, `tool_args`, `tool_result` |
+| `workflow_definitions` | Visual node & edge DAG specifications | `id` (TEXT) | `name`, `graph_json` |
+| `workflow_runs` | Execution instances with status & approvals | `id` (TEXT) | `workflow_id` (FK), `status`, `input_data`, `output_data`, `paused_step_id` |
+| `workflow_steps` | Individual node execution output and duration | `id` (INTEGER) | `run_id` (FK), `node_id`, `node_type`, `status`, `duration_ms` |
+| `evaluations` | Deterministic benchmark test run results | `id` (TEXT) | `suite_name`, `total_tests`, `passed_tests`, `results_json` |
+

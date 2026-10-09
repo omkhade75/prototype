@@ -4,6 +4,27 @@ This roadmap outlines structured milestones for transitioning from the **ORBIT A
 
 ---
 
+## ✅ Completed Milestones
+
+### Phase 1: Foundation & Observability
+- ✅ Pure JavaScript (ES Modules) Express backend + SQLite (WAL mode).
+- ✅ React 18 + Vite frontend with glassmorphism UI.
+- ✅ Transparent pure-Python TF-IDF document chunking and retrieval engine with mathematical scoring and citations.
+- ✅ Visual Workflow Studio with DAG validation (Kahn's topological sort) and human-in-the-loop approval pause/resume.
+- ✅ Bounded tool registry (`search_knowledge_base`, `summarize_document`, `generate_quiz`, `structured_result`).
+
+### Phase 2: Real Local AI Agent Runtime (Ollama)
+- ✅ Implemented native tool calling via Ollama's local chat interface (`POST /api/chat` with `tools` parameter).
+- ✅ Added OpenAI/Ollama function-calling schema generator (`tool_registry.get_ollama_tools()`).
+- ✅ Strict bounding: hard-capped at 5 tool calls per run.
+- ✅ Argument validation: parameters validated against JSON schemas before execution.
+- ✅ Dual-mode runtime: explicit Demo Mode vs. Ollama Mode toggle with no silent fallbacks.
+- ✅ Comprehensive mock-based automated test suite (32 unit & integration tests).
+
+---
+
+## 🚀 Future Milestones
+
 ## Stage 1: Dense Semantic Embeddings & Qdrant Vector Store
 - **Current Baseline**: Transparent local TF-IDF keyword retrieval.
 - **Future Learning Goal**:

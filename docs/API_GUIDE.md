@@ -35,8 +35,12 @@ Returns runtime metrics for Express, SQLite database statistics, and Python AI s
       "status": "healthy",
       "active_provider": "demo",
       "is_demo_mode": true,
-      "configured_model": "extractive-demo-engine",
-      "ollama_reachable": false
+      "configured_model": "llama3",
+      "ollama_base_url": "http://localhost:11434",
+      "ollama_reachable": true,
+      "ollama_installed_models": ["llama3:latest", "phi3:latest"],
+      "ollama_model_installed": true,
+      "ollama_error": null
     }
   }
 }
@@ -122,40 +126,61 @@ Performs TF-IDF retrieval across chunks and generates a grounded answer with cit
 Returns permitted tools and their schema definitions.
 
 ### `POST /api/agent/run`
-Executes a bounded reasoning and tool invocation loop.
+Executes a bounded reasoning and tool invocation loop. Supports `demo` (deterministic) and `ollama` (local model) providers.
 
 **Request Body:**
 ```json
 {
-  "message": "Generate a 3-question quiz on RAG retrieval principles",
-  "provider": "demo",
+  "message": "Explain TF-IDF retrieval based on the uploaded documents",
+  "provider": "ollama",
   "maxSteps": 5
 }
 ```
 
-**Response (201 Created):**
+**Response (201 Created — Successful Ollama Run):**
 ```json
 {
   "success": true,
   "data": {
     "id": "agent-7cb2-4019-91ec-52467d1c1a2f",
-    "user_prompt": "Generate a 3-question quiz on RAG retrieval principles",
+    "user_prompt": "Explain TF-IDF retrieval based on the uploaded documents",
     "status": "successful",
-    "provider": "demo",
-    "duration_ms": 14.8,
+    "provider": "ollama",
+    "model": "llama3",
+    "duration_ms": 1420.5,
     "total_steps": 1,
-    "final_response": "[Demo Agent] Generated a 3-question quiz for topic 'Generate a 3-question quiz on RAG retr'...",
+    "final_response": "Based on the retrieved specification passages, TF-IDF measures term frequency against inverse document frequency...",
     "steps": [
       {
         "step_number": 1,
-        "thought": "User wants a quiz. I will invoke the `generate_quiz` tool.",
-        "tool_name": "generate_quiz",
-        "tool_args": { "topic": "Generate a 3-question quiz...", "num_questions": 3 },
-        "tool_result": { "questions_count": 3, "questions": [...] },
+        "thought": "Model requested tool `search_knowledge_base` with validated parameters.",
+        "tool_name": "search_knowledge_base",
+        "tool_args": { "query": "TF-IDF retrieval", "top_k": 3 },
+        "tool_result": { "query": "TF-IDF retrieval", "matched_count": 2, "passages": [...] },
         "status": "successful",
-        "duration_ms": 0.4
+        "duration_ms": 1.2
       }
     ]
+  }
+}
+```
+
+**Response (201 Created — Ollama Unreachable / Error State):**
+> **Note**: Unlike cloud wrappers that silently fake or fall back, ORBIT AI records the actual error in the execution trace:
+```json
+{
+  "success": true,
+  "data": {
+    "id": "agent-8e11-4091-a20c-71e19bc82e10",
+    "user_prompt": "Explain TF-IDF retrieval",
+    "status": "failed",
+    "provider": "ollama",
+    "model": "llama3",
+    "duration_ms": 12.4,
+    "total_steps": 0,
+    "final_response": "Agent execution encountered an error: Ollama is unreachable at http://localhost:11434. Please ensure the Ollama service is running (`ollama serve`), or switch provider mode to 'demo'.",
+    "error_message": "Ollama is unreachable at http://localhost:11434...",
+    "steps": []
   }
 }
 ```

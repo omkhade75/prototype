@@ -54,6 +54,7 @@ class AgentExecutor:
         return {
             "status": status,
             "provider": self.provider.name,
+            "model": getattr(self.provider, "model", "deterministic-engine"),
             "total_steps": len(steps),
             "duration_ms": total_duration,
             "steps": steps,
@@ -76,9 +77,11 @@ class AgentExecutor:
 
         # Step 1: Decide tool to use
         if any(w in msg_lower for w in ["quiz", "questions", "test me"]):
-            thought = "User wants a quiz. I will invoke the `generate_quiz` tool."
+            from app.agents.quiz_generator import extract_quiz_parameters
+            topic, num_q = extract_quiz_parameters(message)
+            thought = f"Identified quiz request on concise topic '{topic}' ({num_q} question(s)). Retrieving knowledge base for grounding."
             tool_name = "generate_quiz"
-            args = {"topic": message[:40].strip(), "num_questions": 3}
+            args = {"topic": topic, "num_questions": num_q}
             tool_res = tool_registry.execute_tool(tool_name, args, context_chunks=chunks)
             steps.append({
                 "step_number": len(steps) + 1,
@@ -89,13 +92,31 @@ class AgentExecutor:
                 "status": tool_res["status"],
                 "duration_ms": tool_res["duration_ms"]
             })
-            return (
-                f"[Demo Agent] Generated a 3-question quiz for topic '{args['topic']}':\n"
-                + "\n\n".join([
-                    f"Q{q['question_number']}: {q['question']}\n" + "\n".join(q['options']) + f"\nCorrect: {q['correct_answer']} ({q['explanation']})"
-                    for q in tool_res["result"]["questions"]
-                ])
-            )
+
+            res_data = tool_res["result"]
+            if not res_data.get("supported", True) or not res_data.get("questions"):
+                err_msg = res_data.get("message") or f"Could not generate a grounded quiz for topic '{topic}'."
+                return (
+                    f"[Demo Agent] {err_msg}\n\n"
+                    "Note: Demo mode only generates quizzes supported by verifiable facts in the uploaded knowledge base."
+                )
+
+            header = f"[Demo Agent] Grounded Quiz on '{topic}' ({res_data.get('questions_count')} question(s)):\n"
+            if res_data.get("notes"):
+                header += f"Note: {res_data['notes']}\n"
+            header += "\n"
+
+            formatted_q = []
+            for q in res_data["questions"]:
+                q_text = (
+                    f"Q{q['question_number']}: {q['question']}\n"
+                    + "\n".join(q['options'])
+                    + f"\nCorrect Answer: {q['correct_answer']}"
+                    + f"\nExplanation: {q['explanation']} ({q.get('citation', 'Verifiable Source')})"
+                )
+                formatted_q.append(q_text)
+
+            return header + "\n\n".join(formatted_q)
 
         elif any(w in msg_lower for w in ["summarize", "summary", "overview"]):
             thought = "User requested a summary. I will invoke the `summarize_document` tool."
@@ -171,70 +192,143 @@ class AgentExecutor:
         max_steps: int
     ) -> str:
         """
-        LLM agent loop with tool-calling prompt and argument validation.
+        Real Ollama native tool-calling agent loop.
+        Uses POST /api/chat with tool definitions and conversational tool-return turns.
+        Strictly limits tool execution to 5 calls and validates all arguments against schema.
         """
-        tool_defs = tool_registry.get_tool_definitions()
+        # 1. Health check to ensure Ollama is accessible
+        if hasattr(self.provider, "get_health_status"):
+            health = await self.provider.get_health_status()
+            if not health.get("reachable"):
+                raise RuntimeError(
+                    f"Ollama is unreachable at {self.provider.base_url}. "
+                    "Please ensure the Ollama service is running (`ollama serve`), or switch provider mode to 'demo'."
+                )
+
+        # 2. Prepare conversation messages
         system_prompt = (
-            "You are an AI assistant in ORBIT AI with access to the following tools:\n"
-            f"{json.dumps(tool_defs, indent=2)}\n\n"
-            "To use a tool, reply ONLY with a JSON object in this format:\n"
-            '{"action": "tool_call", "thought": "Why you are using this tool", "tool_name": "...", "arguments": {...}}\n'
-            "If you have enough information to answer the user directly without tools, reply with:\n"
-            '{"action": "final_response", "thought": "Final explanation", "response": "Your answer here"}'
+            "You are ORBIT AI, an autonomous local AI engineering assistant with access to verified tools. "
+            "When the user asks a question or gives an instruction, you MUST use the provided tools to "
+            "search the knowledge base, summarize documents, generate grounded quizzes, or format structured data. "
+            "Do not guess or fabricate information. Ground your final response in the actual tool results."
         )
 
-        current_prompt = f"User Request: {message}"
+        messages: List[Dict[str, Any]] = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": message}
+        ]
+
+        # 3. Obtain tool definitions formatted for Ollama /api/chat
+        ollama_tools = tool_registry.get_ollama_tools()
+        executed_tool_calls = 0
 
         for step_idx in range(max_steps):
-            llm_text = await self.provider.generate_text(current_prompt, system_prompt=system_prompt)
-            
-            # Parse JSON action
-            parsed_action = self._parse_json_action(llm_text)
-            if not parsed_action:
-                # Model did not return structured action, return as final response
-                return llm_text
+            # Call Ollama /api/chat with current conversation and tools
+            assistant_msg = await self.provider.chat(messages, tools=ollama_tools)
+            tool_calls = assistant_msg.get("tool_calls", [])
 
-            action_type = parsed_action.get("action")
-            thought = parsed_action.get("thought", "Analyzing step")
+            # Case A: Model provided a final text response without tool calls
+            if not tool_calls:
+                final_text = assistant_msg.get("content", "").strip()
+                if not final_text:
+                    return "[Ollama Agent] Completed execution without additional text output."
+                return final_text
 
-            if action_type == "final_response":
-                return parsed_action.get("response", llm_text)
+            # Case B: Model requested one or more tool calls
+            # Append assistant's tool-call message to conversation history
+            messages.append(assistant_msg)
 
-            elif action_type == "tool_call":
-                t_name = parsed_action.get("tool_name")
-                t_args = parsed_action.get("arguments", {})
-                
-                # Execute bounded tool safely
-                t_res = tool_registry.execute_tool(t_name, t_args, context_chunks=chunks)
-                
+            for t_call in tool_calls:
+                if executed_tool_calls >= self.MAX_TOOL_CALLS:
+                    return f"[Ollama Agent] Terminated: Reached maximum execution limit of {self.MAX_TOOL_CALLS} tool calls."
+
+                func = t_call.get("function", {})
+                tool_name = func.get("name", "")
+                raw_args = func.get("arguments", {})
+
+                # Parse arguments if serialized as string
+                if isinstance(raw_args, str):
+                    try:
+                        parsed_args = json.loads(raw_args)
+                    except Exception as e:
+                        tool_err = f"Malformed argument JSON for tool '{tool_name}': {str(e)}"
+                        steps.append({
+                            "step_number": len(steps) + 1,
+                            "thought": f"Ollama requested tool '{tool_name}' with malformed JSON arguments.",
+                            "tool_name": tool_name,
+                            "tool_args": {"raw": raw_args},
+                            "tool_result": {"error": tool_err},
+                            "status": "failed",
+                            "duration_ms": 0
+                        })
+                        messages.append({
+                            "role": "tool",
+                            "content": json.dumps({"error": tool_err})
+                        })
+                        executed_tool_calls += 1
+                        continue
+                else:
+                    parsed_args = raw_args or {}
+
+                # Security & Schema Validation: Check against permitted tool allowlist
+                if tool_name not in tool_registry.tools:
+                    tool_err = f"Tool '{tool_name}' is not in the permitted tool allowlist."
+                    steps.append({
+                        "step_number": len(steps) + 1,
+                        "thought": f"Model requested unauthorized tool '{tool_name}'. Denying execution.",
+                        "tool_name": tool_name,
+                        "tool_args": parsed_args,
+                        "tool_result": {"error": tool_err},
+                        "status": "failed",
+                        "duration_ms": 0
+                    })
+                    messages.append({
+                        "role": "tool",
+                        "content": json.dumps({"error": tool_err})
+                    })
+                    executed_tool_calls += 1
+                    continue
+
+                # Validate argument schema
+                try:
+                    tool_registry.validate_args(tool_name, parsed_args)
+                except ValueError as ve:
+                    tool_err = f"Schema validation failed for '{tool_name}': {str(ve)}"
+                    steps.append({
+                        "step_number": len(steps) + 1,
+                        "thought": f"Tool argument validation failed for '{tool_name}'.",
+                        "tool_name": tool_name,
+                        "tool_args": parsed_args,
+                        "tool_result": {"error": tool_err},
+                        "status": "failed",
+                        "duration_ms": 0
+                    })
+                    messages.append({
+                        "role": "tool",
+                        "content": json.dumps({"error": tool_err})
+                    })
+                    executed_tool_calls += 1
+                    continue
+
+                # Execute permitted tool safely
+                thought = f"Model requested tool `{tool_name}` with validated parameters."
+                tool_res = tool_registry.execute_tool(tool_name, parsed_args, context_chunks=chunks)
+                executed_tool_calls += 1
+
                 steps.append({
-                    "step_number": step_idx + 1,
+                    "step_number": len(steps) + 1,
                     "thought": thought,
-                    "tool_name": t_name,
-                    "tool_args": t_args,
-                    "tool_result": t_res["result"],
-                    "status": t_res["status"],
-                    "duration_ms": t_res["duration_ms"]
+                    "tool_name": tool_name,
+                    "tool_args": parsed_args,
+                    "tool_result": tool_res["result"],
+                    "status": tool_res["status"],
+                    "duration_ms": tool_res["duration_ms"]
                 })
 
-                if t_res["status"] == "failed":
-                    current_prompt += f"\nTool '{t_name}' failed: {t_res['error']}. Provide final response."
-                else:
-                    current_prompt += f"\nTool '{t_name}' returned: {json.dumps(t_res['result'])}. What next?"
-            else:
-                return llm_text
+                # Append tool result turn for Ollama
+                messages.append({
+                    "role": "tool",
+                    "content": json.dumps(tool_res["result"])
+                })
 
-        return "Agent reached maximum tool call limit of 5 steps."
-
-    def _parse_json_action(self, text: str) -> Optional[Dict[str, Any]]:
-        """
-        Attempts to extract JSON block from model response.
-        """
-        try:
-            # Look for JSON between curly braces
-            match = re.search(r'\{.*\}', text, re.DOTALL)
-            if match:
-                return json.loads(match.group(0))
-        except Exception:
-            pass
-        return None
+        return f"[Ollama Agent] Reached maximum allowed tool execution limit of {self.MAX_TOOL_CALLS} steps."

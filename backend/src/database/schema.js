@@ -35,6 +35,7 @@ export function initializeSchema() {
       user_prompt TEXT NOT NULL,
       status TEXT CHECK(status IN ('running', 'successful', 'failed')) DEFAULT 'running',
       provider TEXT DEFAULT 'demo',
+      model TEXT,
       duration_ms REAL DEFAULT 0,
       total_steps INTEGER DEFAULT 0,
       final_response TEXT,
@@ -119,4 +120,11 @@ export function initializeSchema() {
   `;
 
   db.exec(schemaSql);
+
+  // Safe migration for existing SQLite databases
+  try {
+    db.exec('ALTER TABLE agent_runs ADD COLUMN model TEXT;');
+  } catch {
+    // Column already exists
+  }
 }

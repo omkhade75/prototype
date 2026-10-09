@@ -7,16 +7,17 @@ import {
   Settings, 
   Layers,
   Database,
-  Cpu
+  Cpu,
+  Sparkles
 } from 'lucide-react';
 
 export function Sidebar({ currentTab, setCurrentTab, systemStatus }) {
   const navItems = [
-    { id: 'knowledge', label: 'Knowledge Hub', icon: BookOpen },
-    { id: 'agent', label: 'Agent Playground', icon: Bot },
-    { id: 'workflows', label: 'Workflow Studio', icon: Workflow },
-    { id: 'runs', label: 'Runs & Evaluations', icon: Activity },
-    { id: 'settings', label: 'Settings & Health', icon: Settings },
+    { id: 'knowledge', label: 'Knowledge Hub', icon: BookOpen, color: 'var(--accent-blue)' },
+    { id: 'agent', label: 'Agent Playground', icon: Bot, color: 'var(--accent-violet)' },
+    { id: 'workflows', label: 'Workflow Studio', icon: Workflow, color: 'var(--accent-cyan)' },
+    { id: 'runs', label: 'Runs & Evaluations', icon: Activity, color: 'var(--accent-emerald)' },
+    { id: 'settings', label: 'Settings & Health', icon: Settings, color: 'var(--accent-amber)' },
   ];
 
   const aiServiceStatus = systemStatus?.ai_service?.status === 'healthy';
@@ -24,14 +25,21 @@ export function Sidebar({ currentTab, setCurrentTab, systemStatus }) {
 
   return (
     <aside className="sidebar">
+      {/* Brand Header */}
       <div className="sidebar-header">
-        <span className="brand-badge">ORBIT</span>
-        <div>
-          <h1 className="brand-title">ORBIT AI</h1>
-          <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Learning Prototype</span>
+        <div className="brand-badge">
+          <Sparkles size={16} />
+        </div>
+        <div className="brand-info">
+          <div className="brand-title">
+            ORBIT AI
+            <span className="brand-version">v1.0</span>
+          </div>
+          <span className="brand-subtitle">AI Engineering Workspace</span>
         </div>
       </div>
 
+      {/* Main Navigation */}
       <nav className="sidebar-nav">
         {navItems.map((item) => {
           const Icon = item.icon;
@@ -41,40 +49,45 @@ export function Sidebar({ currentTab, setCurrentTab, systemStatus }) {
               key={item.id}
               className={`nav-link ${isActive ? 'active' : ''}`}
               onClick={() => setCurrentTab(item.id)}
-              style={{ width: '100%', textAlign: 'left', background: 'none' }}
             >
-              <Icon size={18} />
+              <span className="nav-icon">
+                <Icon size={18} />
+              </span>
               <span>{item.label}</span>
             </button>
           );
         })}
       </nav>
 
+      {/* Footer System Telemetry */}
       <div className="sidebar-footer">
         <div className="system-pill">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-            <Cpu size={14} color="#818cf8" />
-            <span>AI Provider</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <Cpu size={14} color="var(--accent-violet-light)" />
+            <span style={{ color: 'var(--text-secondary)' }}>AI Engine</span>
           </div>
-          <span className={`badge ${isDemo ? 'badge-purple' : 'badge-info'}`}>
-            {isDemo ? 'Demo Mode' : 'Ollama'}
+          <span className={`badge ${isDemo ? 'badge-purple' : 'badge-info'}`} style={{ padding: '0.15rem 0.5rem', fontSize: '0.7rem' }}>
+            {isDemo ? 'Demo Mode' : 'Ollama LLM'}
           </span>
         </div>
 
         <div className="system-pill">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-            <Database size={14} color="#34d399" />
-            <span>SQLite WAL</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <Database size={14} color="var(--accent-emerald-light)" />
+            <span style={{ color: 'var(--text-secondary)' }}>SQLite WAL</span>
           </div>
-          <span className="status-dot green" title="Database Connected"></span>
+          <span className="status-dot green" title="WAL Persistence Connected" />
         </div>
 
         <div className="system-pill">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-            <Layers size={14} color="#38bdf8" />
-            <span>Python AI Svc</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <Layers size={14} color="var(--accent-cyan-light)" />
+            <span style={{ color: 'var(--text-secondary)' }}>Python FastAP</span>
           </div>
-          <span className={`status-dot ${aiServiceStatus ? 'green' : 'amber'}`} title={aiServiceStatus ? 'Online' : 'Pending'}></span>
+          <span 
+            className={`status-dot ${aiServiceStatus ? 'green' : 'amber'}`} 
+            title={aiServiceStatus ? 'Python AI Online' : 'Connecting to AI Service'}
+          />
         </div>
       </div>
     </aside>

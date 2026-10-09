@@ -34,8 +34,10 @@ class DemoProvider(ModelProvider):
                 "provider": "demo"
             }
 
-        # Tokenize question words for simple sentence scoring
-        q_tokens = set(re.findall(r'\b\w{3,}\b', question.lower()))
+        from app.rag.retriever import TFIDFRetriever
+
+        # Tokenize question words using normalized stemmer and stop-word filtering
+        q_tokens = set(TFIDFRetriever.tokenize(question, is_query=True))
         
         extracted_sentences = []
         citations = []
@@ -46,10 +48,10 @@ class DemoProvider(ModelProvider):
             page_no = p.get("page_number", 1)
             chunk_id = p.get("id") or p.get("chunk_index", 0)
 
-            # Split into sentences
+            # Split into candidate sentences
             sentences = [s.strip() for s in re.split(r'[.!?\n]+', content) if len(s.strip()) > 15]
             for s in sentences:
-                s_tokens = set(re.findall(r'\b\w{3,}\b', s.lower()))
+                s_tokens = set(TFIDFRetriever.tokenize(s, is_query=False))
                 overlap = len(q_tokens.intersection(s_tokens))
                 if overlap > 0:
                     extracted_sentences.append((overlap, s, p))

@@ -114,14 +114,41 @@ Why do uncontrolled AI agents fail or hallucinate?
 1. They enter infinite recursive loops trying to solve impossible tasks.
 2. They generate hallucinated arguments that crash functions.
 3. They attempt unsafe operating system operations (shell access, deleting files).
+4. Frameworks silently swap models or fall back to mock data, concealing errors.
 
-### How ORBIT AI Solves This:
+### The Engineering of LLM Tool Calling (Ollama Native Loop):
+In `ai-service/app/agents/executor.py`, ORBIT AI implements the native tool-calling protocol without third-party agent frameworks:
+
+1. **Schema Formulation**: `tool_registry.get_ollama_tools()` translates tool definitions into the standard OpenAI/Ollama function-calling format:
+   ```json
+   {
+     "type": "function",
+     "function": {
+       "name": "search_knowledge_base",
+       "description": "Searches uploaded document chunks...",
+       "parameters": {
+         "type": "object",
+         "properties": { "query": { "type": "string" }, "top_k": { "type": "integer" } },
+         "required": ["query"]
+       }
+     }
+   }
+   ```
+2. **First Model Turn**: The agent dispatches `POST /api/chat` with user prompt + tools list. The local model produces a response with `tool_calls` specifying the tool name and arguments.
+3. **Turn Recording**: The assistant message containing `tool_calls` is appended to the conversation history.
+4. **Validation & Execution**: Parameters are validated against the schema. The Python tool executes against the SQLite-backed knowledge chunks.
+5. **Observation Feedback**: The tool output is appended as `{"role": "tool", "content": json.dumps(result)}`.
+6. **Final Synthesis**: The model is called again with the updated message list. It reads the tool observation and synthesizes the final grounded answer.
+
+### How ORBIT AI Enforces Guardrails:
 1. **Tool Registry Schema Validation**:
-   In [`registry.py`](file:///d:/om%20information/prototye/ai-service/app/tools/registry.py), every tool defines required arguments and strict types (e.g. `query` must be a string, `top_k` must be an integer). If an LLM sends `{ "query": 123 }`, `validate_args()` catches it immediately before execution.
+   In [`registry.py`](file:///d:/om%20information/prototye/ai-service/app/tools/registry.py), every tool defines required arguments and strict types. If an LLM sends `{ "query": 123 }`, `validate_args()` catches it immediately before execution and returns an error turn to the model.
 2. **Bounded Loop Cap**:
    The agent loop in [`executor.py`](file:///d:/om%20information/prototye/ai-service/app/agents/executor.py) enforces `MAX_TOOL_CALLS = 5`. It will never loop infinitely.
 3. **No Shell or Arbitrary Code**:
    Permitted tools are strictly limited to `search_knowledge_base`, `summarize_document`, `generate_quiz`, and `structured_result`.
+4. **Failure Honesty**:
+   If Ollama is offline or times out, the system marks the run `failed` and records the exact network error. It never silently pretends Demo Mode was chosen.
 
 ---
 

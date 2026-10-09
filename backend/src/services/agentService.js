@@ -11,6 +11,7 @@ export class AgentService {
         user_prompt, 
         status, 
         provider, 
+        model,
         duration_ms, 
         total_steps, 
         final_response, 
@@ -110,7 +111,8 @@ export class AgentService {
           duration_ms = ?, 
           total_steps = ?, 
           final_response = ?, 
-          error_message = ?
+          error_message = ?,
+          model = ?
         WHERE id = ?
       `).run(
         agentResult.status || 'successful',
@@ -118,6 +120,7 @@ export class AgentService {
         agentResult.total_steps || (agentResult.steps ? agentResult.steps.length : 0),
         agentResult.final_response || '',
         agentResult.error_message || null,
+        agentResult.model || (provider === 'ollama' ? 'llama3' : 'deterministic-engine'),
         runId
       );
 
@@ -127,9 +130,9 @@ export class AgentService {
       const totalDuration = Date.now() - startTime;
       db.prepare(`
         UPDATE agent_runs
-        SET status = 'failed', duration_ms = ?, error_message = ?
+        SET status = 'failed', duration_ms = ?, error_message = ?, model = ?
         WHERE id = ?
-      `).run(totalDuration, err.message, runId);
+      `).run(totalDuration, err.message, provider === 'ollama' ? 'llama3' : 'deterministic-engine', runId);
 
       throw err;
     }

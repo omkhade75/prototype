@@ -92,6 +92,27 @@ class ToolRegistry:
             for t in self.tools.values()
         ]
 
+    def get_ollama_tools(self) -> List[Dict[str, Any]]:
+        """
+        Returns tools formatted for the native Ollama /api/chat tools interface.
+        Follows OpenAI function-calling standard.
+        """
+        return [
+            {
+                "type": "function",
+                "function": {
+                    "name": t.name,
+                    "description": t.description,
+                    "parameters": {
+                        "type": "object",
+                        "properties": t.parameters,
+                        "required": t.required_params
+                    }
+                }
+            }
+            for t in self.tools.values()
+        ]
+
     def validate_args(self, tool_name: str, args: Dict[str, Any]) -> None:
         """
         Validates argument names and types against the tool schema.
@@ -177,28 +198,14 @@ class ToolRegistry:
                     }
 
             elif tool_name == "generate_quiz":
+                from app.agents.quiz_generator import GroundedQuizGenerator
                 topic = args.get("topic", "")
-                num_q = min(int(args.get("num_questions", 3)), 5)
-                # Bounded deterministic quiz based on available chunks and topic
-                sample_questions = []
-                for i in range(1, num_q + 1):
-                    sample_questions.append({
-                        "question_number": i,
-                        "question": f"Which core principle describes {topic} in ORBIT AI architecture (Concept #{i})?",
-                        "options": [
-                            f"A. Deterministic modular design for {topic}",
-                            f"B. Arbitrary unconstrained execution",
-                            f"C. Bypassing validation safeguards",
-                            f"D. Ephemeral in-memory execution"
-                        ],
-                        "correct_answer": "A",
-                        "explanation": f"ORBIT AI enforces deterministic bounded execution for {topic}."
-                    })
-                result_data = {
-                    "topic": topic,
-                    "questions_count": len(sample_questions),
-                    "questions": sample_questions
-                }
+                num_q = max(1, min(int(args.get("num_questions", 3)), 5))
+                result_data = GroundedQuizGenerator.generate_demo_quiz(
+                    topic=topic,
+                    num_questions=num_q,
+                    context_chunks=chunks
+                )
 
             elif tool_name == "structured_result":
                 result_data = {

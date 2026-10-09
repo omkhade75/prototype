@@ -32,13 +32,16 @@ async def get_system_ai_status() -> Dict[str, Any]:
     ollama_model = os.getenv("OLLAMA_MODEL", "llama3")
 
     ollama_prov = OllamaProvider(base_url=ollama_url, model=ollama_model)
-    ollama_reachable = await ollama_prov.is_available()
+    health = await ollama_prov.get_health_status()
 
     return {
         "active_provider": configured_provider,
         "is_demo_mode": configured_provider == "demo",
-        "configured_model": ollama_model if configured_provider == "ollama" else "extractive-demo-engine",
+        "configured_model": ollama_model,
         "ollama_base_url": ollama_url,
-        "ollama_reachable": ollama_reachable,
+        "ollama_reachable": health["reachable"],
+        "ollama_installed_models": health["installed_models"],
+        "ollama_model_installed": health["model_installed"],
+        "ollama_error": health["error"],
         "supported_providers": ["demo", "ollama"]
     }
