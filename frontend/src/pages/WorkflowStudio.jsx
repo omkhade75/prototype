@@ -63,7 +63,7 @@ const CustomNodeWrapper = ({ title, icon: Icon, color, children, isPaused }) => 
       >
         <Icon size={14} />
       </div>
-      <span style={{ color: '#ffffff' }}>{title}</span>
+      <span style={{ color: 'var(--text-main)' }}>{title}</span>
     </div>
     {children}
   </div>
@@ -557,7 +557,7 @@ export function WorkflowStudio() {
                     }}
                   >
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.4rem', alignItems: 'center' }}>
-                      <span style={{ fontWeight: 600, color: '#ffffff' }}>
+                      <span style={{ fontWeight: 600, color: 'var(--text-main)' }}>
                         {step.node_name} <span style={{ color: 'var(--text-dim)', fontSize: '0.72rem' }}>({step.node_type})</span>
                       </span>
                       <span className={`badge ${step.status === 'successful' ? 'badge-success' : 'badge-warning'}`} style={{ fontSize: '0.68rem' }}>

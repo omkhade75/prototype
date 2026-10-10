@@ -197,7 +197,7 @@ export function KnowledgeHub() {
               >
                 <Upload size={20} className={uploading ? 'spin' : ''} />
               </div>
-              <div style={{ fontWeight: 700, color: '#ffffff', fontSize: '0.9rem', marginBottom: '0.2rem' }}>
+              <div style={{ fontWeight: 700, color: 'var(--text-main)', fontSize: '0.9rem', marginBottom: '0.2rem' }}>
                 {uploading ? 'Parsing & Chunking File...' : 'Upload Document'}
               </div>
               <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
@@ -238,7 +238,7 @@ export function KnowledgeHub() {
                         style={{ 
                           fontWeight: 600, 
                           fontSize: '0.875rem', 
-                          color: '#ffffff', 
+                          color: 'var(--text-main)', 
                           whiteSpace: 'nowrap', 
                           overflow: 'hidden', 
                           textOverflow: 'ellipsis' 
@@ -481,8 +481,8 @@ export function KnowledgeHub() {
         {selectedDocForPreview && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             <div style={{ display: 'flex', gap: '1.25rem', fontSize: '0.8rem', color: 'var(--text-muted)', borderBottom: '1px solid var(--border-glass)', paddingBottom: '0.75rem' }}>
-              <span>Total Chunks: <strong style={{ color: '#fff' }}>{selectedDocForPreview.chunk_count}</strong></span>
-              <span>Characters: <strong style={{ color: '#fff' }}>{selectedDocForPreview.char_count}</strong></span>
+              <span>Total Chunks: <strong style={{ color: 'var(--text-main)' }}>{selectedDocForPreview.chunk_count}</strong></span>
+              <span>Characters: <strong style={{ color: 'var(--text-main)' }}>{selectedDocForPreview.char_count}</strong></span>
               <span>Format: <strong style={{ color: 'var(--accent-cyan)' }}>{selectedDocForPreview.file_type.toUpperCase()}</strong></span>
             </div>
 

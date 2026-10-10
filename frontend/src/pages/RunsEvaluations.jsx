@@ -181,7 +181,7 @@ export function RunsEvaluations() {
                           </span>
                         </td>
                         <td style={{ maxWidth: '280px' }}>
-                          <div style={{ fontWeight: 600, color: '#ffffff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={name}>
+                          <div style={{ fontWeight: 600, color: 'var(--text-main)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={name}>
                             {name}
                           </div>
                           <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
@@ -318,7 +318,7 @@ export function RunsEvaluations() {
                           )}
                         </td>
                         <td style={{ fontWeight: 600 }}>
-                          <div style={{ color: '#ffffff' }}>{t.name}</div>
+                          <div style={{ color: 'var(--text-main)' }}>{t.name}</div>
                           <div style={{ fontSize: '0.725rem', color: 'var(--text-muted)', fontWeight: 400 }}>{t.description}</div>
                         </td>
                         <td>
@@ -353,7 +353,7 @@ export function RunsEvaluations() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border-glass)', paddingBottom: '0.85rem', flexWrap: 'wrap', gap: '0.5rem' }}>
               <div>
                 <span className="badge badge-info">{selectedRun.execution_type?.toUpperCase()}</span>
-                <span style={{ marginLeft: '0.65rem', fontWeight: 700, color: '#ffffff' }}>{selectedRun.workflow_name || selectedRun.user_prompt}</span>
+                <span style={{ marginLeft: '0.65rem', fontWeight: 700, color: 'var(--text-main)' }}>{selectedRun.workflow_name || selectedRun.user_prompt}</span>
               </div>
               <div style={{ display: 'flex', gap: '0.65rem', alignItems: 'center' }}>
                 <span className="badge badge-success">{selectedRun.status}</span>

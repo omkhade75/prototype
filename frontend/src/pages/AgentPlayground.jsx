@@ -310,7 +310,7 @@ export function AgentPlayground({ systemStatus, onRefresh }) {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
                   <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                     <span>User Prompt:</span>
-                    <strong style={{ color: '#ffffff', wordBreak: 'break-word' }}>"{currentRun.user_prompt}"</strong>
+                    <strong style={{ color: 'var(--text-main)', wordBreak: 'break-word' }}>"{currentRun.user_prompt}"</strong>
                   </div>
 
                   <div
@@ -360,7 +360,7 @@ export function AgentPlayground({ systemStatus, onRefresh }) {
                     {currentRun.model && (
                       <>
                         <span>•</span>
-                        <span>Model: <strong style={{ color: '#ffffff' }}>{currentRun.model}</strong></span>
+                        <span>Model: <strong style={{ color: 'var(--text-main)' }}>{currentRun.model}</strong></span>
                       </>
                     )}
                   </div>
@@ -430,7 +430,7 @@ export function AgentPlayground({ systemStatus, onRefresh }) {
                     Runtime: <strong style={{ color: (currentRun?.provider || selectedProvider) === 'ollama' ? 'var(--accent-cyan-light)' : 'var(--accent-magenta-light)' }}>
                       {currentRun?.provider || selectedProvider}
                     </strong>
-                    {' '}• Model: <strong style={{ color: '#ffffff' }}>
+                    {' '}• Model: <strong style={{ color: 'var(--text-main)' }}>
                       {currentRun?.model || (selectedProvider === 'ollama' ? configuredModel : 'deterministic-engine')}
                     </strong>
                   </p>
@@ -503,7 +503,7 @@ export function AgentPlayground({ systemStatus, onRefresh }) {
                         <span className="badge badge-magenta" style={{ fontSize: '0.72rem' }}>
                           Step #{step.step_number}
                         </span>
-                        <span style={{ fontWeight: 700, color: '#ffffff', fontSize: '0.85rem' }}>
+                        <span style={{ fontWeight: 700, color: 'var(--text-main)', fontSize: '0.85rem' }}>
                           Tool: <code style={{ color: 'var(--accent-cyan-light)' }}>{step.tool_name}</code>
                         </span>
                       </div>

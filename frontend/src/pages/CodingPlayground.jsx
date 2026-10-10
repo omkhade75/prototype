@@ -732,7 +732,7 @@ export function CodingPlayground({ systemStatus }) {
                       <span className="badge badge-purple" style={{ fontSize: '0.7rem' }}>
                         #{selectedProblem.leetcode_num}
                       </span>
-                      <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#ffffff' }}>
+                      <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--text-main)' }}>
                         {selectedProblem.title}
                       </h3>
                     </div>
@@ -915,7 +915,7 @@ export function CodingPlayground({ systemStatus }) {
                       <div key={idx} style={{ padding: '0.5rem 0.65rem', backgroundColor: 'rgba(4, 7, 15, 0.65)', borderRadius: '6px', fontSize: '0.75rem', display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
                         {Object.entries(step).map(([k, v]) => (
                           <span key={k}>
-                            <strong style={{ color: 'var(--text-dim)' }}>{k}:</strong> <span style={{ color: '#fff' }}>{String(v)}</span>
+                            <strong style={{ color: 'var(--text-dim)' }}>{k}:</strong> <span style={{ color: 'var(--text-main)' }}>{String(v)}</span>
                           </span>
                         ))}
                       </div>
@@ -940,7 +940,7 @@ export function CodingPlayground({ systemStatus }) {
             {leftTab === 'topics' && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <h3 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#ffffff' }}>
+                  <h3 style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text-main)' }}>
                     10 Core DSA Curricular Topics
                   </h3>
                   {selectedTopicId && (
@@ -975,7 +975,7 @@ export function CodingPlayground({ systemStatus }) {
                         }}
                       >
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
-                          <span style={{ fontWeight: 700, color: '#ffffff', fontSize: '0.9rem' }}>{t.name}</span>
+                          <span style={{ fontWeight: 700, color: 'var(--text-main)', fontSize: '0.9rem' }}>{t.name}</span>
                           <span className="badge badge-purple" style={{ fontSize: '0.68rem' }}>
                             View Problems →
                           </span>
@@ -1047,7 +1047,7 @@ export function CodingPlayground({ systemStatus }) {
                             #{prob.leetcode_num}
                           </span>
                           <div>
-                            <div style={{ fontWeight: 600, color: '#ffffff', fontSize: '0.825rem' }}>
+                            <div style={{ fontWeight: 600, color: 'var(--text-main)', fontSize: '0.825rem' }}>
                               {prob.title}
                             </div>
                             <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)' }}>
@@ -1081,7 +1081,7 @@ export function CodingPlayground({ systemStatus }) {
                 {generatingLesson && (
                   <div className="card" style={{ padding: '2rem', textAlign: 'center', backgroundColor: 'rgba(15, 23, 42, 0.85)' }}>
                     <Clock size={32} className="spin" color="var(--accent-purple)" style={{ margin: '0 auto 1rem' }} />
-                    <h4 style={{ fontWeight: 700, color: '#ffffff', marginBottom: '0.5rem' }}>Generating 13-Part DSA Masterclass Lesson...</h4>
+                    <h4 style={{ fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.5rem' }}>Generating 13-Part DSA Masterclass Lesson...</h4>
                     <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
                       Extracting authentic citations, page numbers, analogies, dry runs, and executable code implementations.
                     </p>
@@ -1109,7 +1109,7 @@ export function CodingPlayground({ systemStatus }) {
                           >
                             ← Back
                           </button>
-                          <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#ffffff', margin: 0 }}>
+                          <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--text-main)', margin: 0 }}>
                             {activeLesson.topic_name}
                           </h3>
                         </div>
@@ -1209,7 +1209,7 @@ export function CodingPlayground({ systemStatus }) {
                                       border: `1px solid ${evalInfo ? (evalInfo.is_correct ? 'rgba(16, 185, 129, 0.35)' : 'rgba(239, 68, 68, 0.35)') : 'var(--border-glass-subtle)'}`
                                     }}
                                   >
-                                    <div style={{ fontWeight: 600, fontSize: '0.78rem', color: '#ffffff', marginBottom: '0.5rem' }}>
+                                    <div style={{ fontWeight: 600, fontSize: '0.78rem', color: 'var(--text-main)', marginBottom: '0.5rem' }}>
                                       Q{qIndex + 1}: {q.question}
                                     </div>
 
@@ -1290,7 +1290,7 @@ export function CodingPlayground({ systemStatus }) {
                               {sec.related_problems && sec.related_problems[0] && (
                                 <div style={{ marginTop: '0.5rem', padding: '0.75rem', borderRadius: '8px', backgroundColor: 'var(--glass-elevated)', border: '1px solid var(--border-glass-subtle)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
                                   <div>
-                                    <div style={{ fontWeight: 600, fontSize: '0.8rem', color: '#ffffff' }}>
+                                    <div style={{ fontWeight: 600, fontSize: '0.8rem', color: 'var(--text-main)' }}>
                                       Target LeetCode Practice: {sec.related_problems[0].title}
                                     </div>
                                     <a 
@@ -1381,7 +1381,7 @@ export function CodingPlayground({ systemStatus }) {
                     <div className="card" style={{ backgroundColor: 'rgba(15, 23, 42, 0.75)', border: '1px solid var(--border-glass)', padding: '1.25rem' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem', color: 'var(--accent-purple-light)' }}>
                         <GraduationCap size={20} />
-                        <h3 style={{ fontSize: '1.05rem', fontWeight: 700, margin: 0, color: '#ffffff' }}>
+                        <h3 style={{ fontSize: '1.05rem', fontWeight: 700, margin: 0, color: 'var(--text-main)' }}>
                           PDF-Based DSA Tutor & Topic Extractor
                         </h3>
                       </div>
@@ -1442,7 +1442,7 @@ export function CodingPlayground({ systemStatus }) {
                                 >
                                   <div style={{ flex: 1, minWidth: '220px' }}>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', marginBottom: '0.25rem' }}>
-                                      <span style={{ fontWeight: 700, color: '#ffffff', fontSize: '0.85rem' }}>
+                                      <span style={{ fontWeight: 700, color: 'var(--text-main)', fontSize: '0.85rem' }}>
                                         {match.topic_name}
                                       </span>
                                       <span className="badge badge-purple" style={{ fontSize: '0.65rem' }}>
@@ -1476,7 +1476,7 @@ export function CodingPlayground({ systemStatus }) {
                     </div>
 
                     <div className="card" style={{ backgroundColor: 'rgba(15, 23, 42, 0.55)', border: '1px solid var(--border-glass)', padding: '1.25rem' }}>
-                      <h4 style={{ fontSize: '0.925rem', fontWeight: 700, color: '#ffffff', marginBottom: '0.35rem' }}>
+                      <h4 style={{ fontSize: '0.925rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.35rem' }}>
                         Complete 15-Topic DSA Masterclass Syllabus
                       </h4>
                       <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.85rem' }}>
@@ -1529,7 +1529,7 @@ export function CodingPlayground({ systemStatus }) {
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem', paddingBottom: '0.75rem', borderBottom: '1px solid var(--border-glass-subtle)' }}>
                   <div>
-                    <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#ffffff', margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--text-main)', margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                       <Award size={20} color="var(--accent-amber-light)" />
                       <span>Personal Learning Dashboard & Analytics</span>
                     </h3>
@@ -1644,7 +1644,7 @@ export function CodingPlayground({ systemStatus }) {
                 )}
 
                 <div className="card" style={{ padding: '1rem', backgroundColor: 'rgba(15, 23, 42, 0.75)', border: '1px solid var(--border-glass)' }}>
-                  <h4 style={{ fontSize: '0.9rem', fontWeight: 700, color: '#ffffff', marginBottom: '0.65rem' }}>
+                  <h4 style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.65rem' }}>
                     Curriculum Mastery Matrix
                   </h4>
 
@@ -1680,7 +1680,7 @@ export function CodingPlayground({ systemStatus }) {
                             >
                               {isMastered ? 'Mastered 🏆' : prog ? (prog.status === 'in_progress' ? 'In Progress' : 'Practicing') : 'Not Started'}
                             </span>
-                            <span style={{ fontWeight: 600, fontSize: '0.8rem', color: '#ffffff' }}>
+                            <span style={{ fontWeight: 600, fontSize: '0.8rem', color: 'var(--text-main)' }}>
                               {t.name}
                             </span>
                             {needsRev && (
@@ -1927,7 +1927,7 @@ export function CodingPlayground({ systemStatus }) {
                   </div>
                 ) : hintData ? (
                   <div style={{ padding: '0.65rem', borderRadius: '6px', backgroundColor: 'var(--glass-elevated)', border: '1px solid var(--border-glass-subtle)', lineHeight: 1.5, whiteSpace: 'pre-wrap', color: 'var(--text-secondary)' }}>
-                    <div style={{ fontWeight: 700, color: '#ffffff', marginBottom: '0.25rem' }}>
+                    <div style={{ fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.25rem' }}>
                       {hintData.title}
                     </div>
                     {hintData.hint_text}

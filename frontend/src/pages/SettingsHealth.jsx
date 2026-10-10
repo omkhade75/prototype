@@ -87,7 +87,7 @@ export function SettingsHealth({ systemStatus, onRefresh }) {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '0.825rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-glass-subtle)', paddingBottom: '0.5rem' }}>
               <span style={{ color: 'var(--text-muted)' }}>Runtime Environment</span>
-              <strong style={{ color: '#ffffff' }}>{backend.runtime || 'Node.js'}</strong>
+              <strong style={{ color: 'var(--text-main)' }}>{backend.runtime || 'Node.js'}</strong>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-glass-subtle)', paddingBottom: '0.5rem' }}>
               <span style={{ color: 'var(--text-muted)' }}>Listening Port</span>
@@ -95,7 +95,7 @@ export function SettingsHealth({ systemStatus, onRefresh }) {
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-glass-subtle)', paddingBottom: '0.5rem' }}>
               <span style={{ color: 'var(--text-muted)' }}>Service Uptime</span>
-              <strong style={{ color: '#ffffff' }}>{backend.uptime_seconds || 0} seconds</strong>
+              <strong style={{ color: 'var(--text-main)' }}>{backend.uptime_seconds || 0} seconds</strong>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <span style={{ color: 'var(--text-muted)' }}>Role</span>
@@ -122,7 +122,7 @@ export function SettingsHealth({ systemStatus, onRefresh }) {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '0.825rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-glass-subtle)', paddingBottom: '0.5rem' }}>
               <span style={{ color: 'var(--text-muted)' }}>Storage Driver</span>
-              <strong style={{ color: '#ffffff' }}>{dbStats.engine || 'better-sqlite3'}</strong>
+              <strong style={{ color: 'var(--text-main)' }}>{dbStats.engine || 'better-sqlite3'}</strong>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-glass-subtle)', paddingBottom: '0.5rem' }}>
               <span style={{ color: 'var(--text-muted)' }}>Stored Documents</span>
@@ -164,7 +164,7 @@ export function SettingsHealth({ systemStatus, onRefresh }) {
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-glass-subtle)', paddingBottom: '0.5rem' }}>
               <span style={{ color: 'var(--text-muted)' }}>Configured Model</span>
-              <strong style={{ color: '#ffffff' }}>{ai.configured_model || 'llama3'}</strong>
+              <strong style={{ color: 'var(--text-main)' }}>{ai.configured_model || 'llama3'}</strong>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border-glass-subtle)', paddingBottom: '0.5rem' }}>
               <span style={{ color: 'var(--text-muted)' }}>Ollama Daemon</span>

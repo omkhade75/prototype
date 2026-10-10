@@ -11,17 +11,21 @@ import {
   Cpu,
   Sparkles,
   Terminal,
+  Home as HomeIcon,
+  Compass,
   Boxes,
   GraduationCap
 } from 'lucide-react';
 
 export function Sidebar({ currentTab, setCurrentTab, systemStatus }) {
   const navItems = [
+    { id: 'home', label: 'Home', icon: HomeIcon, color: 'var(--accent-violet)' },
+    { id: 'user-guide', label: 'Start Here / Guide', icon: Compass, color: 'var(--accent-blue)' },
     { id: 'course-lab', label: 'Course-to-Code Lab', icon: GraduationCap, color: 'var(--accent-teal)' },
     { id: 'engineer', label: 'Software Engineer', icon: Terminal, color: 'var(--accent-indigo)' },
     { id: 'models', label: 'AI Model Library', icon: Boxes, color: 'var(--accent-violet)' },
     { id: 'coding', label: 'Coding Playground', icon: Code2, color: 'var(--accent-amber)' },
-    { id: 'agent', label: 'Agent Playground', icon: Bot, color: 'var(--accent-violet)' },
+    { id: 'agent', label: 'Agent Playground', icon: Bot, color: 'var(--accent-pink)' },
     { id: 'workflows', label: 'Workflow Studio', icon: Workflow, color: 'var(--accent-cyan)' },
     { id: 'knowledge', label: 'Knowledge Hub', icon: BookOpen, color: 'var(--accent-blue)' },
     { id: 'runs', label: 'Runs & Evaluations', icon: Activity, color: 'var(--accent-emerald)' },

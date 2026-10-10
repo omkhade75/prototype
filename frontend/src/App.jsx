@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar';
+import Home from './pages/Home';
+import UserGuide from './pages/UserGuide';
 import KnowledgeHub from './pages/KnowledgeHub';
 import CodingPlayground from './pages/CodingPlayground';
 import AgentPlayground from './pages/AgentPlayground';
@@ -11,8 +13,10 @@ import ModelLibrary from './pages/ModelLibrary';
 import CourseLab from './pages/CourseLab';
 import { api } from './services/api';
 import { 
+  Home as HomeIcon,
+  Compass,
   BookOpen, 
-  Code2,
+  Code2, 
   Bot, 
   Workflow, 
   Activity, 
@@ -29,11 +33,11 @@ import {
 } from 'lucide-react';
 
 export function App() {
-  const [currentTab, setCurrentTab] = useState('knowledge');
+  const [currentTab, setCurrentTab] = useState('home');
   const [systemStatus, setSystemStatus] = useState(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [theme, setTheme] = useState(() => {
-    return localStorage.getItem('orbit_theme') || 'light';
+    return localStorage.getItem('orbit_theme') || 'dark';
   });
 
   useEffect(() => {
@@ -64,6 +68,18 @@ export function App() {
   }, []);
 
   const tabConfig = {
+    home: {
+      title: 'ORBIT AI Workspace',
+      subtitle: 'Local-First AI Engineering, Learning Platform & Guided Hub',
+      icon: HomeIcon,
+      color: 'var(--accent-violet)'
+    },
+    'user-guide': {
+      title: 'Start Here: Complete User Guide',
+      subtitle: 'Tab-by-Tab Manual, Goal-Based Recommendations, Beginner Tutorials & Troubleshooting',
+      icon: Compass,
+      color: 'var(--accent-blue)'
+    },
     'course-lab': {
       title: 'Course-to-Code Lab',
       subtitle: 'Course Materials, Structured Lesson Scaffolding & Jupyter Notebook Generator',
@@ -210,6 +226,8 @@ export function App() {
 
         {/* Dynamic Page Container */}
         <section className="content-area">
+          {currentTab === 'home' && <Home systemStatus={systemStatus} setCurrentTab={setCurrentTab} />}
+          {currentTab === 'user-guide' && <UserGuide setCurrentTab={setCurrentTab} />}
           {currentTab === 'course-lab' && <CourseLab systemStatus={systemStatus} />}
           {currentTab === 'engineer' && <SoftwareEngineer systemStatus={systemStatus} />}
           {currentTab === 'models' && <ModelLibrary systemStatus={systemStatus} onRefresh={fetchHealth} />}

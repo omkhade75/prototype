@@ -302,15 +302,15 @@ code, pre, .mono {
 }
 
 .nav-link:hover {
-  background: rgba(255, 255, 255, 0.05);
-  color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.1);
+  background: var(--glass-pill);
+  color: var(--text-main);
+  border-color: var(--border-glass-subtle);
   transform: translateX(3px);
 }
 
 .nav-link.active {
   background: linear-gradient(90deg, rgba(139, 92, 246, 0.22) 0%, rgba(236, 72, 153, 0.1) 100%);
-  color: #ffffff;
+  color: var(--text-main);
   border: 1px solid rgba(139, 92, 246, 0.5);
   font-weight: 700;
   box-shadow: 0 4px 18px -2px rgba(139, 92, 246, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.15);
@@ -565,7 +565,7 @@ code, pre, .mono {
   font-size: 1.05rem;
   font-weight: 700;
   letter-spacing: -0.2px;
-  color: #ffffff;
+  color: var(--text-main);
 }
 
 .card-subtitle {
@@ -580,6 +580,66 @@ code, pre, .mono {
   border: 1px solid var(--border-glass-subtle);
   border-radius: 12px;
   padding: 1.15rem;
+}
+
+.panel-glass {
+  background: var(--glass-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-glass);
+  border-radius: 12px;
+  box-shadow: var(--shadow-glass-card);
+  transition: border-color var(--transition-fast);
+}
+
+.card-interactive {
+  transition: all var(--transition-fast);
+}
+
+.card-interactive:hover {
+  background: var(--glass-card-hover) !important;
+  border-color: var(--border-glass-hover) !important;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.input-glass {
+  background: var(--glass-input);
+  border: 1px solid var(--border-glass);
+  color: var(--text-main);
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  font-family: var(--font-sans);
+  font-size: 0.825rem;
+  outline: none;
+  transition: all var(--transition-fast);
+}
+
+.input-glass:focus {
+  border-color: var(--border-glass-focus);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+}
+
+.input-glass::placeholder {
+  color: var(--text-dim);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid transparent;
+  padding: 0.4rem 0.75rem;
+  border-radius: 8px;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-ghost:hover:not(:disabled) {
+  color: var(--text-main);
+  background: var(--glass-pill);
 }
 
 /* ==========================================================================
@@ -790,6 +850,34 @@ button:disabled {
   box-shadow: 0 0 12px rgba(236, 72, 153, 0.25);
 }
 
+.badge-indigo {
+  background: rgba(99, 102, 241, 0.18);
+  color: #818cf8;
+  border: 1px solid rgba(99, 102, 241, 0.45);
+  box-shadow: 0 0 12px rgba(99, 102, 241, 0.2);
+}
+
+.badge-emerald {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.45);
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.2);
+}
+
+.badge-amber {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.45);
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.2);
+}
+
+.badge-rose {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.45);
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.2);
+}
+
 /* ==========================================================================
    QUIZ CARD STYLING & INTERACTIVE QUESTIONS
    ========================================================================== */
@@ -814,7 +902,7 @@ button:disabled {
 .quiz-question-title {
   font-size: 0.95rem;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--text-main);
   line-height: 1.5;
   margin-bottom: 0.75rem;
 }
@@ -964,7 +1052,7 @@ button:disabled {
 .empty-state-title {
   font-weight: 700;
   font-size: 1rem;
-  color: #ffffff;
+  color: var(--text-main);
   margin-bottom: 0.25rem;
 }
 

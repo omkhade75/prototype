@@ -1,5 +1,6 @@
 import { db } from '../database/db.js';
 import { AIService } from '../services/aiService.js';
+import { EngineerService } from '../services/engineerService.js';
 
 export class HealthController {
   static async getSystemStatus(req, res, next) {
@@ -13,6 +14,7 @@ export class HealthController {
       const projectCount = db.prepare('SELECT COUNT(*) as count FROM engineer_projects').get()?.count || 0;
       const courseCount = db.prepare('SELECT COUNT(*) as count FROM course_materials').get()?.count || 0;
       const activeModelRow = db.prepare("SELECT value FROM app_settings WHERE key = 'active_model'").get();
+      const dockerStatus = EngineerService.checkDocker();
 
       // 2. Check Python AI Service Health
       const aiHealth = await AIService.getHealth();
@@ -25,7 +27,8 @@ export class HealthController {
             runtime: `Node.js ${process.version}`,
             uptime_seconds: Math.floor(process.uptime()),
             port: process.env.PORT || 5000,
-            active_model: activeModelRow ? activeModelRow.value : 'llama3'
+            active_model: activeModelRow ? activeModelRow.value : 'llama3',
+            docker_available: dockerStatus.available
           },
           database: {
             engine: 'SQLite 3 (better-sqlite3)',

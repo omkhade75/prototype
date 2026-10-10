@@ -59,6 +59,27 @@ export function SoftwareEngineer({ systemStatus }) {
   const [isEditing, setIsEditing] = useState(false);
   const [savingFile, setSavingFile] = useState(false);
   const [loadingFile, setLoadingFile] = useState(false);
+  const [copiedFile, setCopiedFile] = useState(false);
+
+  const handleCopyCode = () => {
+    if (!fileContent) return;
+    navigator.clipboard.writeText(fileContent);
+    setCopiedFile(true);
+    setTimeout(() => setCopiedFile(false), 2000);
+  };
+
+  const getAllFiles = (nodes) => {
+    let result = [];
+    for (const node of nodes || []) {
+      if (node.type === 'file') {
+        result.push(node);
+      }
+      if (node.children) {
+        result = result.concat(getAllFiles(node.children));
+      }
+    }
+    return result;
+  };
 
   // AI Agent Operations
   const [selectedProvider, setSelectedProvider] = useState('demo');
@@ -356,20 +377,22 @@ export function SoftwareEngineer({ systemStatus }) {
     <div style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 80px)', gap: '0.75rem' }}>
       
       {/* Top Workspace Header Bar */}
-      <header className="panel-glass" style={{ padding: '0.75rem 1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
+      <header className="panel-glass" style={{ padding: '0.75rem 1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.85rem' }}>
         
         {/* Left: Project Selector & Meta */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-            <Terminal size={18} color="var(--accent-indigo)" />
-            <span style={{ fontWeight: 700, fontSize: '0.92rem', color: 'var(--text-main)' }}>Workspace:</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+            <div style={{ width: '28px', height: '28px', borderRadius: '6px', background: 'rgba(99, 102, 241, 0.15)', color: 'var(--accent-indigo)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Terminal size={16} />
+            </div>
+            <span style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-main)' }}>Workspace:</span>
           </div>
 
           <select
             value={selectedProjectId || ''}
             onChange={(e) => setSelectedProjectId(e.target.value)}
             className="input-glass"
-            style={{ padding: '0.35rem 0.75rem', fontSize: '0.82rem', minWidth: '220px' }}
+            style={{ padding: '0.4rem 0.85rem', fontSize: '0.82rem', minWidth: '240px', fontWeight: 600 }}
           >
             {projects.map((p) => (
               <option key={p.id} value={p.id}>
@@ -381,33 +404,34 @@ export function SoftwareEngineer({ systemStatus }) {
           <button
             onClick={() => setShowNewModal(true)}
             className="btn-secondary"
-            style={{ padding: '0.35rem 0.65rem', fontSize: '0.78rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }}
+            style={{ padding: '0.4rem 0.75rem', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.35rem', fontWeight: 600 }}
           >
             <Plus size={14} /> New Project
           </button>
 
           {selectedProject && (
-            <span className="badge badge-blue" style={{ fontSize: '0.7rem' }}>
+            <span className="badge badge-indigo" style={{ fontSize: '0.72rem', padding: '0.15rem 0.55rem' }}>
               {selectedProject.stack}
             </span>
           )}
         </div>
 
         {/* Right: Runtime Controls & Actions */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexWrap: 'wrap' }}>
           {/* Model / Provider Selector */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', background: 'rgba(0,0,0,0.2)', padding: '0.2rem 0.5rem', borderRadius: '6px', border: '1px solid var(--border-glass-subtle)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: 'var(--bg-secondary)', padding: '0.25rem 0.65rem', borderRadius: '8px', border: '1px solid var(--border-glass)' }}>
             <Cpu size={14} color="var(--accent-violet)" />
             <select
               value={selectedProvider}
               onChange={(e) => setSelectedProvider(e.target.value)}
-              style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', fontSize: '0.74rem', cursor: 'pointer' }}
+              style={{ background: 'transparent', border: 'none', color: 'var(--text-main)', fontSize: '0.76rem', fontWeight: 600, cursor: 'pointer' }}
             >
               <option value="demo">Demo Mode (Deterministic)</option>
               <option value="ollama" disabled={!ollamaReachable}>
                 Ollama Local ({configuredModel}) {!ollamaReachable ? '(Offline)' : ''}
               </option>
             </select>
+            <span className={`status-dot ${selectedProvider === 'ollama' && ollamaReachable ? 'green' : 'amber'}`} style={{ width: '7px', height: '7px' }} />
           </div>
 
           {/* Plan Project Action */}
@@ -415,10 +439,10 @@ export function SoftwareEngineer({ systemStatus }) {
             onClick={handlePlanProject}
             disabled={isPlanning || isGenerating || !selectedProjectId}
             className="btn-secondary"
-            style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}
+            style={{ padding: '0.45rem 0.9rem', fontSize: '0.82rem', display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 600 }}
           >
-            <Sparkles size={14} className={isPlanning ? 'spin' : ''} />
-            {isPlanning ? 'Planning...' : 'Plan Project'}
+            <Sparkles size={14} className={isPlanning ? 'spin' : ''} color="var(--accent-violet-light)" />
+            {isPlanning ? 'Planning...' : 'Plan Architecture'}
           </button>
 
           {/* Generate & Run Action */}
@@ -426,10 +450,10 @@ export function SoftwareEngineer({ systemStatus }) {
             onClick={handleGenerateProject}
             disabled={isGenerating || isPlanning || !selectedProjectId}
             className="btn-primary"
-            style={{ padding: '0.4rem 0.9rem', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}
+            style={{ padding: '0.45rem 1.05rem', fontSize: '0.82rem', display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 700 }}
           >
             <Play size={14} className={isGenerating ? 'spin' : ''} />
-            {isGenerating ? 'Building Full-Stack...' : 'Generate & Run'}
+            {isGenerating ? 'Scaffolding & Building...' : 'Generate & Run Full-Stack'}
           </button>
 
           {/* Local Preview Action */}
@@ -440,7 +464,7 @@ export function SoftwareEngineer({ systemStatus }) {
                 target="_blank"
                 rel="noreferrer"
                 className="btn-primary"
-                style={{ background: 'var(--accent-emerald)', borderColor: 'var(--accent-emerald)', padding: '0.4rem 0.8rem', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.35rem', textDecoration: 'none' }}
+                style={{ background: 'var(--accent-emerald)', borderColor: 'var(--accent-emerald)', padding: '0.45rem 0.85rem', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.35rem', textDecoration: 'none', fontWeight: 600 }}
               >
                 <ExternalLink size={13} />
                 Preview: {previewStatus.port}
@@ -449,7 +473,7 @@ export function SoftwareEngineer({ systemStatus }) {
                 onClick={handleStopPreview}
                 className="btn-secondary"
                 title="Stop Local Preview Server"
-                style={{ padding: '0.4rem', color: '#f87171' }}
+                style={{ padding: '0.45rem', color: 'var(--accent-rose-light)' }}
               >
                 <Square size={13} />
               </button>
@@ -459,9 +483,9 @@ export function SoftwareEngineer({ systemStatus }) {
               onClick={handleStartPreview}
               disabled={previewStarting || !selectedProjectId}
               className="btn-secondary"
-              style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}
+              style={{ padding: '0.45rem 0.85rem', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.35rem', fontWeight: 600 }}
             >
-              <Play size={13} color="var(--accent-emerald-light)" />
+              <Play size={13} color="var(--accent-emerald)" />
               {previewStarting ? 'Starting...' : 'Start Preview'}
             </button>
           )}
@@ -722,91 +746,361 @@ export function SoftwareEngineer({ systemStatus }) {
           </div>
         </div>
 
-        {/* Center Column: Code Editor & File Viewer */}
+        {/* Center Column: Code Editor & Workspace Overview */}
         <div className="panel-glass" style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
           {/* File Toolbar */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem 0.85rem', borderBottom: '1px solid var(--border-glass-subtle)', background: 'rgba(0,0,0,0.15)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-main)' }}>
-              <FileCode size={15} color="var(--accent-blue-light)" />
-              <span>{selectedFilePath || 'Select a file to view'}</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-main)', minWidth: 0 }}>
+              {selectedFilePath ? (
+                <>
+                  <FileCode size={15} color="var(--accent-blue-light)" style={{ flexShrink: 0 }} />
+                  <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{selectedFilePath}</span>
+                  <span className="badge badge-indigo" style={{ fontSize: '0.66rem', padding: '0.1rem 0.4rem' }}>
+                    {(fileContent || '').split('\n').length} lines
+                  </span>
+                </>
+              ) : (
+                <>
+                  <Layers size={15} color="var(--accent-blue-light)" style={{ flexShrink: 0 }} />
+                  <span>Workspace Overview</span>
+                  <span className="badge badge-emerald" style={{ fontSize: '0.66rem', padding: '0.1rem 0.4rem' }}>
+                    {getAllFiles(fileTree).length} files
+                  </span>
+                </>
+              )}
             </div>
 
-            {selectedFilePath && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                {isEditing ? (
-                  <>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              {selectedFilePath ? (
+                <>
+                  <button
+                    onClick={handleCopyCode}
+                    className="btn-secondary"
+                    style={{ padding: '0.25rem 0.6rem', fontSize: '0.74rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }}
+                    title="Copy file contents"
+                  >
+                    {copiedFile ? <Check size={12} color="var(--accent-emerald)" /> : <Copy size={12} />}
+                    <span>{copiedFile ? 'Copied' : 'Copy'}</span>
+                  </button>
+                  <button
+                    onClick={() => setSelectedFilePath(null)}
+                    className="btn-secondary"
+                    style={{ padding: '0.25rem 0.6rem', fontSize: '0.74rem' }}
+                    title="Return to Workspace Overview"
+                  >
+                    Overview
+                  </button>
+                  {isEditing ? (
+                    <>
+                      <button
+                        onClick={handleSaveFile}
+                        disabled={savingFile}
+                        className="btn-primary"
+                        style={{ padding: '0.25rem 0.6rem', fontSize: '0.74rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }}
+                      >
+                        <Save size={12} /> {savingFile ? 'Saving...' : 'Save File'}
+                      </button>
+                      <button
+                        onClick={() => loadFileContent(selectedProjectId, selectedFilePath)}
+                        className="btn-secondary"
+                        style={{ padding: '0.25rem 0.6rem', fontSize: '0.74rem' }}
+                      >
+                        Cancel
+                      </button>
+                    </>
+                  ) : (
                     <button
-                      onClick={handleSaveFile}
-                      disabled={savingFile}
-                      className="btn-primary"
-                      style={{ padding: '0.25rem 0.6rem', fontSize: '0.74rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }}
-                    >
-                      <Save size={12} /> {savingFile ? 'Saving...' : 'Save File'}
-                    </button>
-                    <button
-                      onClick={() => loadFileContent(selectedProjectId, selectedFilePath)}
+                      onClick={() => setIsEditing(true)}
                       className="btn-secondary"
                       style={{ padding: '0.25rem 0.6rem', fontSize: '0.74rem' }}
                     >
-                      Cancel
+                      Edit Code
                     </button>
-                  </>
-                ) : (
-                  <button
-                    onClick={() => setIsEditing(true)}
-                    className="btn-secondary"
-                    style={{ padding: '0.25rem 0.6rem', fontSize: '0.74rem' }}
+                  )}
+                </>
+              ) : (
+                <button
+                  onClick={() => setLeftTab('files')}
+                  className="btn-secondary"
+                  style={{ padding: '0.25rem 0.6rem', fontSize: '0.74rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }}
+                >
+                  <FolderTree size={12} />
+                  <span>Browse Tree</span>
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Editor Body or Workspace Overview */}
+          <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
+            {selectedFilePath ? (
+              loadingFile ? (
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--text-muted)', fontSize: '0.82rem' }}>
+                  Loading file content...
+                </div>
+              ) : isEditing ? (
+                <textarea
+                  value={fileContent}
+                  onChange={(e) => setFileContent(e.target.value)}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    background: '#090d16',
+                    color: '#e2e8f0',
+                    fontFamily: 'Consolas, Monaco, "Courier New", monospace',
+                    fontSize: '0.8rem',
+                    lineHeight: '1.5',
+                    padding: '1rem',
+                    border: 'none',
+                    outline: 'none',
+                    resize: 'none'
+                  }}
+                />
+              ) : (
+                <div style={{ display: 'flex', height: '100%', overflow: 'auto', background: '#090d16' }}>
+                  {/* Line Numbers Gutter */}
+                  <div
+                    style={{
+                      userSelect: 'none',
+                      textAlign: 'right',
+                      padding: '0.85rem 0.65rem 0.85rem 0.5rem',
+                      color: '#475569',
+                      borderRight: '1px solid rgba(255, 255, 255, 0.08)',
+                      background: 'rgba(0, 0, 0, 0.35)',
+                      fontFamily: 'Consolas, Monaco, "Courier New", monospace',
+                      fontSize: '0.8rem',
+                      lineHeight: '1.5',
+                      minWidth: '2.8rem'
+                    }}
                   >
-                    Edit Code
-                  </button>
+                    {(fileContent || '').split('\n').map((_, idx) => (
+                      <div key={idx}>{idx + 1}</div>
+                    ))}
+                  </div>
+                  {/* Code Body */}
+                  <pre
+                    style={{
+                      flex: 1,
+                      margin: 0,
+                      padding: '0.85rem 1rem',
+                      overflow: 'visible',
+                      background: 'transparent',
+                      color: '#e2e8f0',
+                      fontFamily: 'Consolas, Monaco, "Courier New", monospace',
+                      fontSize: '0.8rem',
+                      lineHeight: '1.5',
+                      whiteSpace: 'pre'
+                    }}
+                  >
+                    <code>{fileContent}</code>
+                  </pre>
+                </div>
+              )
+            ) : (
+              /* Workspace Overview State when no file is selected */
+              <div style={{ height: '100%', overflowY: 'auto', padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                {/* Project Banner Card */}
+                <div style={{
+                  background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.6), rgba(15, 23, 42, 0.8))',
+                  border: '1px solid var(--border-glass-subtle)',
+                  borderRadius: '10px',
+                  padding: '1.25rem'
+                }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem', flexWrap: 'wrap' }}>
+                    <div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.35rem' }}>
+                        <h2 style={{ fontSize: '1.2rem', fontWeight: 700, margin: 0, color: 'var(--text-main)' }}>
+                          {selectedProject?.name || 'Local AI Workspace'}
+                        </h2>
+                        <span className="badge badge-indigo" style={{ fontSize: '0.72rem' }}>
+                          {selectedProject?.stack || 'react-express-sqlite'}
+                        </span>
+                      </div>
+                      <p style={{ margin: 0, fontSize: '0.82rem', color: 'var(--text-secondary)', maxWidth: '640px', lineHeight: 1.5 }}>
+                        {selectedProject?.description || 'No prompt specified yet.'}
+                      </p>
+                    </div>
+                    <button
+                      onClick={handleGenerateProject}
+                      disabled={isGenerating}
+                      className="btn-primary"
+                      style={{ padding: '0.45rem 0.85rem', fontSize: '0.78rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
+                    >
+                      {isGenerating ? <RotateCw size={13} className="spin" /> : <Sparkles size={13} />}
+                      <span>{isGenerating ? 'Generating...' : 'Generate Full-Stack'}</span>
+                    </button>
+                  </div>
+
+                  {/* Key Metrics Row */}
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))',
+                    gap: '0.75rem',
+                    marginTop: '1.1rem',
+                    paddingTop: '1rem',
+                    borderTop: '1px solid rgba(255, 255, 255, 0.08)'
+                  }}>
+                    <div style={{ background: 'rgba(0,0,0,0.25)', padding: '0.65rem 0.75rem', borderRadius: '6px' }}>
+                      <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 600 }}>Files in Tree</div>
+                      <div style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--accent-blue-light)', marginTop: '0.2rem' }}>
+                        {getAllFiles(fileTree).length}
+                      </div>
+                    </div>
+                    <div style={{ background: 'rgba(0,0,0,0.25)', padding: '0.65rem 0.75rem', borderRadius: '6px' }}>
+                      <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 600 }}>Tasks Defined</div>
+                      <div style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--accent-emerald)', marginTop: '0.2rem' }}>
+                        {selectedProject?.tasks?.length || 0}
+                      </div>
+                    </div>
+                    <div style={{ background: 'rgba(0,0,0,0.25)', padding: '0.65rem 0.75rem', borderRadius: '6px' }}>
+                      <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 600 }}>Preview Status</div>
+                      <div style={{ fontSize: '0.85rem', fontWeight: 600, color: previewStatus.status === 'running' ? 'var(--accent-emerald)' : 'var(--text-secondary)', marginTop: '0.35rem' }}>
+                        {previewStatus.status === 'running' ? `Port ${previewStatus.port}` : 'Stopped'}
+                      </div>
+                    </div>
+                    <div style={{ background: 'rgba(0,0,0,0.25)', padding: '0.65rem 0.75rem', borderRadius: '6px' }}>
+                      <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 600 }}>AI Provider</div>
+                      <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--accent-cyan)', marginTop: '0.35rem' }}>
+                        {selectedProvider === 'ollama' ? (ollamaReachable ? `Ollama (${configuredModel})` : 'Ollama (Offline)') : 'Demo (Deterministic)'}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Workflow Actions */}
+                <div>
+                  <h3 style={{ fontSize: '0.82rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 700, margin: '0 0 0.65rem 0' }}>
+                    Workflow Actions
+                  </h3>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.75rem' }}>
+                    <div
+                      onClick={handlePlanProject}
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.03)',
+                        border: '1px solid var(--border-glass-subtle)',
+                        borderRadius: '8px',
+                        padding: '0.85rem',
+                        cursor: 'pointer'
+                      }}
+                      className="card-interactive"
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.3rem' }}>
+                        <Cpu size={16} color="var(--accent-blue-light)" />
+                        <strong style={{ fontSize: '0.82rem', color: 'var(--text-main)' }}>Plan Architecture</strong>
+                      </div>
+                      <div style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', lineHeight: 1.4 }}>
+                        Analyze prompt specifications, database tables, and generate implementation checklist.
+                      </div>
+                    </div>
+
+                    <div
+                      onClick={() => setLeftTab('files')}
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.03)',
+                        border: '1px solid var(--border-glass-subtle)',
+                        borderRadius: '8px',
+                        padding: '0.85rem',
+                        cursor: 'pointer'
+                      }}
+                      className="card-interactive"
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.3rem' }}>
+                        <FolderTree size={16} color="var(--accent-amber-light)" />
+                        <strong style={{ fontSize: '0.82rem', color: 'var(--text-main)' }}>Browse Workspace Files</strong>
+                      </div>
+                      <div style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', lineHeight: 1.4 }}>
+                        {getAllFiles(fileTree).length > 0 ? `Inspect all ${getAllFiles(fileTree).length} generated project files.` : 'View and create project files.'}
+                      </div>
+                    </div>
+
+                    <div
+                      onClick={previewStatus.status === 'running' ? () => setConsoleTab('preview') : handleStartPreview}
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.03)',
+                        border: '1px solid var(--border-glass-subtle)',
+                        borderRadius: '8px',
+                        padding: '0.85rem',
+                        cursor: 'pointer'
+                      }}
+                      className="card-interactive"
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.3rem' }}>
+                        <Play size={16} color="var(--accent-emerald)" />
+                        <strong style={{ fontSize: '0.82rem', color: 'var(--text-main)' }}>
+                          {previewStatus.status === 'running' ? 'Open Live Preview' : 'Start Preview Server'}
+                        </strong>
+                      </div>
+                      <div style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', lineHeight: 1.4 }}>
+                        {previewStatus.status === 'running' ? `Running on port ${previewStatus.port}. Click to inspect live UI.` : 'Spin up local server to verify frontend and backend routes.'}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Quick File Shortcuts if files exist */}
+                {getAllFiles(fileTree).length > 0 ? (
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                      <h3 style={{ fontSize: '0.82rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 700, margin: 0 }}>
+                        Quick File Shortcuts
+                      </h3>
+                      <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Click to open in editor</span>
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '0.5rem' }}>
+                      {getAllFiles(fileTree).slice(0, 8).map((file) => (
+                        <button
+                          key={file.path}
+                          onClick={() => loadFileContent(selectedProjectId, file.path)}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.5rem',
+                            padding: '0.55rem 0.75rem',
+                            background: 'rgba(0, 0, 0, 0.25)',
+                            border: '1px solid var(--border-glass-subtle)',
+                            borderRadius: '6px',
+                            color: 'var(--text-main)',
+                            fontSize: '0.75rem',
+                            cursor: 'pointer',
+                            textAlign: 'left',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap'
+                          }}
+                        >
+                          <FileCode size={14} color="var(--accent-blue-light)" style={{ flexShrink: 0 }} />
+                          <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{file.path}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <div style={{
+                    background: 'rgba(255, 255, 255, 0.02)',
+                    border: '1px dashed var(--border-glass-subtle)',
+                    borderRadius: '8px',
+                    padding: '1.25rem',
+                    textAlign: 'center'
+                  }}>
+                    <h4 style={{ fontSize: '0.9rem', color: 'var(--text-main)', margin: '0 0 0.35rem 0' }}>No Code Generated Yet</h4>
+                    <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', margin: '0 auto 1rem auto', maxWidth: '480px' }}>
+                      This workspace is ready for development. Choose your provider above and click <strong>Generate & Run Full-Stack</strong> to create the complete codebase.
+                    </p>
+                    <button
+                      onClick={handleGenerateProject}
+                      disabled={isGenerating}
+                      className="btn-primary"
+                      style={{ padding: '0.45rem 1rem', fontSize: '0.78rem' }}
+                    >
+                      {isGenerating ? 'Generating...' : 'Start Full-Stack Generation'}
+                    </button>
+                  </div>
                 )}
               </div>
             )}
           </div>
-
-          {/* Editor Body */}
-          <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
-            {loadingFile ? (
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--text-muted)', fontSize: '0.82rem' }}>
-                Loading file content...
-              </div>
-            ) : isEditing ? (
-              <textarea
-                value={fileContent}
-                onChange={(e) => setFileContent(e.target.value)}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  background: '#090d16',
-                  color: '#e2e8f0',
-                  fontFamily: 'Consolas, Monaco, "Courier New", monospace',
-                  fontSize: '0.8rem',
-                  lineHeight: '1.45',
-                  padding: '1rem',
-                  border: 'none',
-                  outline: 'none',
-                  resize: 'none'
-                }}
-              />
-            ) : (
-              <pre
-                style={{
-                  margin: 0,
-                  height: '100%',
-                  padding: '1rem',
-                  overflow: 'auto',
-                  background: '#090d16',
-                  color: '#e2e8f0',
-                  fontFamily: 'Consolas, Monaco, "Courier New", monospace',
-                  fontSize: '0.8rem',
-                  lineHeight: '1.45'
-                }}
-              >
-                <code>{fileContent || '// Select a file from the explorer on the left to inspect its source code.'}</code>
-              </pre>
-            )}
-          </div>
         </div>
+
 
         {/* Right Column: Execution Trace, Tests & Live Preview */}
         <div className="panel-glass" style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
