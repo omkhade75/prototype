@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar';
 import KnowledgeHub from './pages/KnowledgeHub';
+import CodingPlayground from './pages/CodingPlayground';
 import AgentPlayground from './pages/AgentPlayground';
 import WorkflowStudio from './pages/WorkflowStudio';
 import RunsEvaluations from './pages/RunsEvaluations';
 import SettingsHealth from './pages/SettingsHealth';
+import SoftwareEngineer from './pages/SoftwareEngineer';
 import { api } from './services/api';
 import { 
   BookOpen, 
+  Code2,
   Bot, 
   Workflow, 
   Activity, 
@@ -15,13 +18,28 @@ import {
   RefreshCw,
   Cpu,
   CheckCircle2,
-  Database
+  Database,
+  Sun,
+  Moon,
+  Terminal
 } from 'lucide-react';
 
 export function App() {
   const [currentTab, setCurrentTab] = useState('knowledge');
   const [systemStatus, setSystemStatus] = useState(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('orbit_theme') || 'light';
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('orbit_theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => (prev === 'light' ? 'dark' : 'light'));
+  };
 
   const fetchHealth = async () => {
     try {
@@ -42,11 +60,23 @@ export function App() {
   }, []);
 
   const tabConfig = {
+    engineer: {
+      title: 'AI Software Engineer',
+      subtitle: 'Autonomous Full-Stack Local Agent & Workspace Sandbox',
+      icon: Terminal,
+      color: 'var(--accent-indigo)'
+    },
     knowledge: {
       title: 'Knowledge Hub',
       subtitle: 'RAG Document Management & Verifiable TF-IDF Q&A',
       icon: BookOpen,
       color: 'var(--accent-blue)'
+    },
+    coding: {
+      title: 'Coding Playground & DSA Tutor',
+      subtitle: 'Structured C++ & Python Learning, Intuition Building & LeetCode Prep',
+      icon: Code2,
+      color: 'var(--accent-amber)'
     },
     agent: {
       title: 'Agent Playground',
@@ -70,7 +100,7 @@ export function App() {
       title: 'Settings & System Health',
       subtitle: 'Microservice Connectivity, SQLite WAL & AI Providers',
       icon: Settings,
-      color: 'var(--accent-amber)'
+      color: 'var(--accent-magenta)'
     }
   };
 
@@ -139,6 +169,16 @@ export function App() {
               </span>
             </div>
 
+            {/* Theme Toggle Button */}
+            <button
+              onClick={toggleTheme}
+              className="btn-secondary btn-icon"
+              title={theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
+              style={{ height: '34px', width: '34px', borderRadius: '8px' }}
+            >
+              {theme === 'light' ? <Moon size={15} color="var(--accent-violet)" /> : <Sun size={15} color="var(--accent-amber)" />}
+            </button>
+
             {/* Quick Ping Button */}
             <button
               onClick={fetchHealth}
@@ -154,7 +194,9 @@ export function App() {
 
         {/* Dynamic Page Container */}
         <section className="content-area">
+          {currentTab === 'engineer' && <SoftwareEngineer systemStatus={systemStatus} />}
           {currentTab === 'knowledge' && <KnowledgeHub />}
+          {currentTab === 'coding' && <CodingPlayground systemStatus={systemStatus} />}
           {currentTab === 'agent' && <AgentPlayground systemStatus={systemStatus} onRefresh={fetchHealth} />}
           {currentTab === 'workflows' && <WorkflowStudio />}
           {currentTab === 'runs' && <RunsEvaluations />}

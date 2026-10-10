@@ -112,11 +112,115 @@ export function initializeSchema() {
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
 
+    -- 9. Learning Progress Table (Topic-level mastery and stats)
+    CREATE TABLE IF NOT EXISTS learning_progress (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      topic_id TEXT NOT NULL UNIQUE,
+      topic_name TEXT NOT NULL,
+      status TEXT CHECK(status IN ('not_started', 'in_progress', 'practicing', 'mastered')) DEFAULT 'not_started',
+      lessons_completed INTEGER DEFAULT 0,
+      quiz_attempts INTEGER DEFAULT 0,
+      quiz_passed INTEGER DEFAULT 0,
+      last_quiz_score REAL DEFAULT 0.0,
+      problems_attempted INTEGER DEFAULT 0,
+      problems_solved_independently INTEGER DEFAULT 0,
+      problems_solved_with_solution INTEGER DEFAULT 0,
+      hints_requested_count INTEGER DEFAULT 0,
+      mistakes_recorded TEXT DEFAULT '[]',
+      needs_revision INTEGER DEFAULT 0,
+      last_studied_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+
+    -- 10. Learning Activity Logs (Granular trace of student actions)
+    CREATE TABLE IF NOT EXISTS learning_activity_logs (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      activity_type TEXT NOT NULL,
+      topic_id TEXT,
+      problem_id TEXT,
+      document_id INTEGER,
+      document_name TEXT,
+      score REAL,
+      passed INTEGER DEFAULT 0,
+      details_json TEXT DEFAULT '{}',
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+
+    -- 11. Learning Quiz Attempts (History of quiz results)
+    CREATE TABLE IF NOT EXISTS learning_quiz_attempts (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      topic_id TEXT,
+      document_id INTEGER,
+      total_questions INTEGER NOT NULL,
+      correct_answers INTEGER NOT NULL,
+      score_percent REAL NOT NULL,
+      answers_json TEXT DEFAULT '[]',
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+
+    -- 12. Software Engineer Projects Table
+    CREATE TABLE IF NOT EXISTS engineer_projects (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      description TEXT NOT NULL,
+      workspace_path TEXT NOT NULL,
+      stack TEXT NOT NULL DEFAULT 'react-express-sqlite',
+      status TEXT CHECK(status IN ('created', 'planning', 'generating', 'building', 'testing', 'completed', 'failed')) DEFAULT 'created',
+      preview_port INTEGER DEFAULT 5173,
+      preview_pid INTEGER,
+      preview_status TEXT CHECK(preview_status IN ('stopped', 'starting', 'running', 'error')) DEFAULT 'stopped',
+      preview_url TEXT,
+      git_status TEXT DEFAULT '{}',
+      summary_json TEXT DEFAULT '{}',
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+
+    -- 13. Software Engineer Tasks Table
+    CREATE TABLE IF NOT EXISTS engineer_tasks (
+      id TEXT PRIMARY KEY,
+      project_id TEXT NOT NULL,
+      title TEXT NOT NULL,
+      description TEXT,
+      category TEXT CHECK(category IN ('architecture', 'scaffold', 'backend', 'frontend', 'database', 'test', 'verification')) DEFAULT 'scaffold',
+      status TEXT CHECK(status IN ('pending', 'in_progress', 'completed', 'failed', 'skipped')) DEFAULT 'pending',
+      order_index INTEGER NOT NULL DEFAULT 0,
+      files_affected TEXT DEFAULT '[]',
+      commands_run TEXT DEFAULT '[]',
+      error_details TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (project_id) REFERENCES engineer_projects (id) ON DELETE CASCADE
+    );
+
+    -- 14. Software Engineer Activities / Execution Trace
+    CREATE TABLE IF NOT EXISTS engineer_activities (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      project_id TEXT NOT NULL,
+      task_id TEXT,
+      activity_type TEXT NOT NULL,
+      description TEXT NOT NULL,
+      command TEXT,
+      exit_code INTEGER,
+      stdout TEXT,
+      stderr TEXT,
+      duration_ms REAL DEFAULT 0,
+      details_json TEXT DEFAULT '{}',
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (project_id) REFERENCES engineer_projects (id) ON DELETE CASCADE
+    );
+
     -- Indexes for efficient lookup
     CREATE INDEX IF NOT EXISTS idx_chunks_doc_id ON document_chunks(document_id);
     CREATE INDEX IF NOT EXISTS idx_agent_steps_run_id ON agent_steps(run_id);
     CREATE INDEX IF NOT EXISTS idx_workflow_steps_run_id ON workflow_steps(run_id);
     CREATE INDEX IF NOT EXISTS idx_workflow_runs_workflow_id ON workflow_runs(workflow_id);
+    CREATE INDEX IF NOT EXISTS idx_learning_progress_topic ON learning_progress(topic_id);
+    CREATE INDEX IF NOT EXISTS idx_learning_logs_topic ON learning_activity_logs(topic_id);
+    CREATE INDEX IF NOT EXISTS idx_learning_quiz_topic ON learning_quiz_attempts(topic_id);
+    CREATE INDEX IF NOT EXISTS idx_engineer_tasks_project ON engineer_tasks(project_id);
+    CREATE INDEX IF NOT EXISTS idx_engineer_activities_project ON engineer_activities(project_id);
   `;
 
   db.exec(schemaSql);

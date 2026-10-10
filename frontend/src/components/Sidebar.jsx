@@ -1,6 +1,7 @@
 import React from 'react';
 import { 
   BookOpen, 
+  Code2,
   Bot, 
   Workflow, 
   Activity, 
@@ -8,16 +9,19 @@ import {
   Layers,
   Database,
   Cpu,
-  Sparkles
+  Sparkles,
+  Terminal
 } from 'lucide-react';
 
 export function Sidebar({ currentTab, setCurrentTab, systemStatus }) {
   const navItems = [
-    { id: 'knowledge', label: 'Knowledge Hub', icon: BookOpen, color: 'var(--accent-blue)' },
+    { id: 'engineer', label: 'Software Engineer', icon: Terminal, color: 'var(--accent-indigo)' },
+    { id: 'coding', label: 'Coding Playground', icon: Code2, color: 'var(--accent-amber)' },
     { id: 'agent', label: 'Agent Playground', icon: Bot, color: 'var(--accent-violet)' },
     { id: 'workflows', label: 'Workflow Studio', icon: Workflow, color: 'var(--accent-cyan)' },
+    { id: 'knowledge', label: 'Knowledge Hub', icon: BookOpen, color: 'var(--accent-blue)' },
     { id: 'runs', label: 'Runs & Evaluations', icon: Activity, color: 'var(--accent-emerald)' },
-    { id: 'settings', label: 'Settings & Health', icon: Settings, color: 'var(--accent-amber)' },
+    { id: 'settings', label: 'Settings & Health', icon: Settings, color: 'var(--accent-magenta)' },
   ];
 
   const aiServiceStatus = systemStatus?.ai_service?.status === 'healthy';

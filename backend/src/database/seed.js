@@ -184,4 +184,49 @@ export function seedDatabase() {
       '[Demo Agent] Found 1 relevant passage in knowledge base: "Workflow Studio enables visual DAG execution. Node types include Input, Knowledge Search, AI Task, Condition, Human Approval, and Output."'
     );
   }
+
+  // Seed sample initial Software Engineer project if table is empty
+  const projectCount = db.prepare('SELECT COUNT(*) as count FROM engineer_projects').get().count;
+  if (projectCount === 0) {
+    const projId = 'proj_sample_restaurant';
+    const wsPath = 'restaurant-management';
+
+    db.prepare(`
+      INSERT INTO engineer_projects (
+        id, name, description, workspace_path, stack, status, preview_port, preview_status, summary_json, created_at, updated_at
+      ) VALUES (?, ?, ?, ?, 'react-express-sqlite', 'completed', 5173, 'stopped', ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+    `).run(
+      projId,
+      'Restaurant Management System',
+      'Build a restaurant management system with React, Express, SQLite, authentication, billing, inventory, analytics and an admin dashboard.',
+      wsPath,
+      JSON.stringify({
+        domain: 'Restaurant Management System',
+        backend: { framework: 'Express.js', database: 'SQLite', port: 3001 },
+        frontend: { framework: 'React JSX', styling: 'Glassy Dark Design System' },
+        database_tables: ['menu_items', 'orders', 'tables', 'inventory']
+      })
+    );
+
+    // Seed tasks
+    const tasks = [
+      { id: 'task_s_1', title: 'Design Database Schema & SQLite Data Layer', category: 'database', status: 'completed' },
+      { id: 'task_s_2', title: 'Scaffold Backend REST API Server', category: 'backend', status: 'completed' },
+      { id: 'task_s_3', title: 'Implement Menu & Order CRUD Endpoints', category: 'backend', status: 'completed' },
+      { id: 'task_s_4', title: 'Build React UI Shell & Glassy Dashboard', category: 'frontend', status: 'completed' },
+      { id: 'task_s_5', title: 'Implement Interactive Tables & Stock Alerts', category: 'frontend', status: 'completed' },
+      { id: 'task_s_6', title: 'Write Automated Test Suite (tests/api.test.js)', category: 'test', status: 'completed' },
+      { id: 'task_s_7', title: 'End-to-End Build & Run Verification', category: 'verification', status: 'completed' }
+    ];
+
+    const insertTask = db.prepare(`
+      INSERT INTO engineer_tasks (id, project_id, title, category, status, order_index, created_at)
+      VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+    `);
+
+    tasks.forEach((t, idx) => {
+      insertTask.run(t.id, projId, t.title, t.category, t.status, idx);
+    });
+  }
 }
+

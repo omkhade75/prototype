@@ -86,7 +86,203 @@ export const api = {
   // --- Evaluations ---
   getEvaluations: () => request('/evaluations/results'),
   getEvaluation: (id) => request(`/evaluations/results/${id}`),
-  runEvaluations: () => request('/evaluations/run', { method: 'POST' })
+  runEvaluations: () => request('/evaluations/run', { method: 'POST' }),
+
+  // --- Coding Playground ---
+  getCodingTopics: () => request('/coding/topics'),
+  getCodingTopic: (id) => request(`/coding/topics/${id}`),
+  getCodingProblems: (topicId = null) =>
+    request(`/coding/problems${topicId ? `?topic_id=${encodeURIComponent(topicId)}` : ''}`),
+  getCodingProblem: (id) => request(`/coding/problems/${id}`),
+  consultCodingTutor: ({
+    mode = 'learn',
+    language = 'cpp',
+    problemId = null,
+    topicId = null,
+    studentCode = null,
+    userQuery = null,
+    documentId = null,
+    provider = 'demo'
+  }) =>
+    request('/coding/tutor', {
+      method: 'POST',
+      body: JSON.stringify({
+        mode,
+        language,
+        problemId,
+        topicId,
+        studentCode,
+        userQuery,
+        documentId,
+        provider
+      })
+    }),
+  getCodingRunnerStatus: () => request('/coding/runner/status'),
+  runCode: ({ language, code, problemId = null, customInput = null, testCases = null }) =>
+    request('/coding/run', {
+      method: 'POST',
+      body: JSON.stringify({
+        language,
+        code,
+        problemId,
+        customInput,
+        testCases
+      })
+    }),
+
+  // --- PDF-Based DSA Tutor & Lessons ---
+  analyzeDocumentTopics: (documentId) =>
+    request('/coding/document/analyze-topics', {
+      method: 'POST',
+      body: JSON.stringify({ documentId })
+    }),
+  generateLesson: ({ topicId, language = 'cpp', documentId = null, provider = 'demo' }) =>
+    request('/coding/lesson/generate', {
+      method: 'POST',
+      body: JSON.stringify({ topicId, language, documentId, provider })
+    }),
+  answerLessonFollowup: ({ topicId, sectionNumber, question, documentId = null }) =>
+    request('/coding/lesson/followup', {
+      method: 'POST',
+      body: JSON.stringify({ topicId, sectionNumber, question, documentId })
+    }),
+  getProgressiveHint: ({ problemId, hintLevel = 1, language = 'cpp', topicId = null }) =>
+    request('/coding/hints', {
+      method: 'POST',
+      body: JSON.stringify({ problemId, hintLevel, language, topicId })
+    }),
+  evaluateQuiz: ({ topicId, answers }) =>
+    request('/coding/quiz/evaluate', {
+      method: 'POST',
+      body: JSON.stringify({ topicId, answers })
+    }),
+
+  // --- Personalized Learning Progress & Analytics ---
+  getLearningDashboard: () => request('/learning/dashboard'),
+  recordTopicLesson: ({ topicId, topicName, documentId = null, documentName = null }) =>
+    request('/learning/lesson', {
+      method: 'POST',
+      body: JSON.stringify({ topicId, topicName, documentId, documentName })
+    }),
+  recordHintRequest: ({ topicId, topicName, problemId, hintLevel = 1 }) =>
+    request('/learning/hint', {
+      method: 'POST',
+      body: JSON.stringify({ topicId, topicName, problemId, hintLevel })
+    }),
+  recordProblemAttempt: ({
+    topicId,
+    topicName,
+    problemId,
+    solved = false,
+    independent = true,
+    usedSolution = false,
+    hintsCount = 0,
+    errorDescription = null
+  }) =>
+    request('/learning/attempt', {
+      method: 'POST',
+      body: JSON.stringify({
+        topicId,
+        topicName,
+        problemId,
+        solved,
+        independent,
+        usedSolution,
+        hintsCount,
+        errorDescription
+      })
+    }),
+  recordQuizAttempt: ({ topicId, topicName, score, totalQuestions, passed, answers }) =>
+    request('/learning/quiz', {
+      method: 'POST',
+      body: JSON.stringify({ topicId, topicName, score, totalQuestions, passed, answers })
+    }),
+  resetLearningProgress: () =>
+    request('/learning/reset', {
+      method: 'POST'
+    }),
+
+  // --- Software Engineer Agent & Workspaces ---
+  getEngineerProjects: () => request('/engineer/projects'),
+  getEngineerProject: (id) => request(`/engineer/projects/${encodeURIComponent(id)}`),
+  createEngineerProject: ({ name, description, stack }) =>
+    request('/engineer/projects', {
+      method: 'POST',
+      body: JSON.stringify({ name, description, stack })
+    }),
+  updateEngineerProject: (id, updates) =>
+    request(`/engineer/projects/${encodeURIComponent(id)}`, {
+      method: 'PATCH',
+      body: JSON.stringify(updates)
+    }),
+  deleteEngineerProject: (id) =>
+    request(`/engineer/projects/${encodeURIComponent(id)}`, {
+      method: 'DELETE'
+    }),
+  getEngineerTasks: (id) => request(`/engineer/projects/${encodeURIComponent(id)}/tasks`),
+  createEngineerTask: (id, taskData) =>
+    request(`/engineer/projects/${encodeURIComponent(id)}/tasks`, {
+      method: 'POST',
+      body: JSON.stringify(taskData)
+    }),
+  updateEngineerTask: (id, taskId, updates) =>
+    request(`/engineer/projects/${encodeURIComponent(id)}/tasks/${encodeURIComponent(taskId)}`, {
+      method: 'PATCH',
+      body: JSON.stringify(updates)
+    }),
+  getEngineerFileTree: (id) => request(`/engineer/projects/${encodeURIComponent(id)}/files`),
+  readEngineerFile: (id, path) => request(`/engineer/projects/${encodeURIComponent(id)}/files/content?path=${encodeURIComponent(path)}`),
+  writeEngineerFile: (id, path, content) =>
+    request(`/engineer/projects/${encodeURIComponent(id)}/files`, {
+      method: 'POST',
+      body: JSON.stringify({ path, content })
+    }),
+  editEngineerFile: (id, path, target_content, replacement_content) =>
+    request(`/engineer/projects/${encodeURIComponent(id)}/files/edit`, {
+      method: 'PUT',
+      body: JSON.stringify({ path, target_content, replacement_content })
+    }),
+  executeEngineerCommand: (id, { command, args, confirmed = false }) =>
+    request(`/engineer/projects/${encodeURIComponent(id)}/commands`, {
+      method: 'POST',
+      body: JSON.stringify({ command, args, confirmed })
+    }),
+  getEngineerGitStatus: (id) => request(`/engineer/projects/${encodeURIComponent(id)}/git/status`),
+  previewEngineerCommit: (id) => request(`/engineer/projects/${encodeURIComponent(id)}/git/preview-commit`),
+  createEngineerCommit: (id, message, confirmed = false) =>
+    request(`/engineer/projects/${encodeURIComponent(id)}/git/commit`, {
+      method: 'POST',
+      body: JSON.stringify({ message, confirmed })
+    }),
+  pushEngineerRepo: (id, remote = 'origin', branch = 'main', confirmed = false) =>
+    request(`/engineer/projects/${encodeURIComponent(id)}/git/push`, {
+      method: 'POST',
+      body: JSON.stringify({ remote, branch, confirmed })
+    }),
+  startEngineerPreview: (id) =>
+    request(`/engineer/projects/${encodeURIComponent(id)}/preview/start`, {
+      method: 'POST'
+    }),
+  stopEngineerPreview: (id) =>
+    request(`/engineer/projects/${encodeURIComponent(id)}/preview/stop`, {
+      method: 'POST'
+    }),
+  getEngineerPreviewStatus: (id) => request(`/engineer/projects/${encodeURIComponent(id)}/preview/status`),
+  planEngineerProject: (id, { prompt, stack, provider = 'demo', model }) =>
+    request(`/engineer/projects/${encodeURIComponent(id)}/ai/plan`, {
+      method: 'POST',
+      body: JSON.stringify({ prompt, stack, provider, model })
+    }),
+  generateEngineerProject: (id, { provider = 'demo', model }) =>
+    request(`/engineer/projects/${encodeURIComponent(id)}/ai/generate`, {
+      method: 'POST',
+      body: JSON.stringify({ provider, model })
+    }),
+  repairEngineerProject: (id, { error_details, provider = 'demo', model }) =>
+    request(`/engineer/projects/${encodeURIComponent(id)}/ai/repair`, {
+      method: 'POST',
+      body: JSON.stringify({ error_details, provider, model })
+    })
 };
 
 export default api;

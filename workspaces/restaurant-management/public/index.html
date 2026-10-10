@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Restaurant Management System — ORBIT Generated</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <div id="app">
+    <header class="app-header">
+      <div class="logo">
+        <span class="icon">🍽️</span>
+        <h2>Restaurant OS</h2>
+      </div>
+      <div id="system-status" class="status-badge">Connecting...</div>
+    </header>
+
+    <main class="dashboard-container">
+      <!-- KPI Metric Cards -->
+      <section class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-label">Total Revenue</div>
+          <div class="kpi-value" id="val-revenue">$0.00</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Active Orders</div>
+          <div class="kpi-value" id="val-orders">0</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Table Occupancy</div>
+          <div class="kpi-value" id="val-tables">0 / 0</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Low Stock Alerts</div>
+          <div class="kpi-value" id="val-stock">0</div>
+        </div>
+      </section>
+
+      <!-- Main Tabs / Sections -->
+      <section class="content-split">
+        <!-- Menu Items Panel -->
+        <div class="panel">
+          <div class="panel-header">
+            <h3>Menu Management</h3>
+            <button class="btn-primary" onclick="openAddModal()">+ Add Item</button>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Category</th>
+                  <th>Price</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="menu-tbody">
+                <tr><td colspan="5">Loading menu items...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Orders & Tables Panel -->
+        <div class="panel">
+          <div class="panel-header">
+            <h3>Recent Orders & Tables</h3>
+            <button class="btn-secondary" onclick="createSampleOrder()">+ Quick Order</button>
+          </div>
+          <div class="orders-list" id="orders-list">
+            Loading orders...
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>

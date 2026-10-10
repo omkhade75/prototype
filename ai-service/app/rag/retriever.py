@@ -68,6 +68,7 @@ def stem_term(term: str) -> str:
         ("ers", ""), ("er", ""),
         ("ors", ""), ("or", ""),
         ("ies", "y"), ("ied", "y"),
+        ("ees", "ee"),
         ("es", ""), ("ed", ""),
         ("ly", ""),
         ("s", "")

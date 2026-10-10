@@ -12,6 +12,9 @@ import agentRoutes from './routes/agentRoutes.js';
 import workflowRoutes from './routes/workflowRoutes.js';
 import runRoutes from './routes/runRoutes.js';
 import evaluationRoutes from './routes/evaluationRoutes.js';
+import codingRoutes from './routes/codingRoutes.js';
+import learningRoutes from './routes/learningRoutes.js';
+import engineerRoutes from './routes/engineerRoutes.js';
 
 export function createApp() {
   const app = express();
@@ -33,6 +36,9 @@ export function createApp() {
   app.use('/api/workflows', workflowRoutes);
   app.use('/api/runs', runRoutes);
   app.use('/api/evaluations', evaluationRoutes);
+  app.use('/api/coding', codingRoutes);
+  app.use('/api/learning', learningRoutes);
+  app.use('/api/engineer', engineerRoutes);
 
   // 4. Global Error Handler
   app.use(errorHandler);
