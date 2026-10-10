@@ -24,6 +24,8 @@ backend/storage/uploads/*
 # Environment files
 .env
 .env.local
+.env.*
+!.env.example
 
 # Vite Build Output
 dist/
@@ -35,9 +37,18 @@ dist-ssr/
 npm-debug.log*
 yarn-debug.log*
 
-# OS Artifacts
+# OS Artifacts & IDEs
 .DS_Store
 Thumbs.db
+.vscode/
+.idea/
 
-# Ephemeral test workspaces
+# Jupyter Notebook Checkpoints
+.ipynb_checkpoints/
+
+# Ephemeral test workspaces and model caches
 workspaces/test-*
+backend/workspaces/
+*.gguf
+*.safetensors
+*.bin

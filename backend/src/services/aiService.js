@@ -93,11 +93,11 @@ export class AIService {
     return await res.json();
   }
 
-  static async runAgent(message, chunks = [], provider = 'demo', maxSteps = 5) {
+  static async runAgent(message, chunks = [], provider = 'demo', maxSteps = 5, model = null) {
     const res = await fetch(`${AI_SERVICE_URL}/agent/run`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message, chunks, provider, max_steps: maxSteps })
+      body: JSON.stringify({ message, chunks, provider, max_steps: maxSteps, model })
     });
 
     if (!res.ok) {

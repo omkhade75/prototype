@@ -10,6 +10,7 @@ class AgentRunRequest(BaseModel):
     message: str
     chunks: Optional[List[Dict[str, Any]]] = None
     provider: Optional[str] = None
+    model: Optional[str] = None
     max_steps: Optional[int] = 5
 
 @router.get("/tools")
@@ -29,7 +30,7 @@ async def run_agent(req: AgentRunRequest):
     durations, and final response.
     """
     try:
-        executor = AgentExecutor(provider_name=req.provider)
+        executor = AgentExecutor(provider_name=req.provider, model=req.model)
         result = await executor.run(
             user_message=req.message,
             context_chunks=req.chunks,

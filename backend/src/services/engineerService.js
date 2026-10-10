@@ -2,10 +2,15 @@ import fs from 'fs';
 import path from 'path';
 import { spawn, execSync } from 'child_process';
 import net from 'net';
+import { fileURLToPath } from 'url';
 import { db } from '../database/db.js';
 
-// Designated root for all generated projects
-const WORKSPACES_DIR = path.resolve(process.cwd(), 'workspaces');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Designated root for all generated projects (anchored to root workspaces folder)
+const DEFAULT_WORKSPACES_DIR = path.resolve(__dirname, '../../../workspaces');
+const WORKSPACES_DIR = process.env.WORKSPACES_DIR || DEFAULT_WORKSPACES_DIR;
 
 // Ensure base workspaces directory exists
 if (!fs.existsSync(WORKSPACES_DIR)) {
@@ -192,12 +197,25 @@ export class EngineerService {
     return this.getProject(projectId);
   }
 
-  static deleteProject(projectId) {
+  static deleteProject(projectId, { deleteFiles = false } = {}) {
     // Stop any active preview first
     this.stopPreview(projectId);
 
     const project = this.getProjectRecord(projectId);
     if (!project) return false;
+
+    // Optionally clean up workspace directory from disk
+    if (deleteFiles && project.workspace_path) {
+      try {
+        const wsRoot = path.resolve(WORKSPACES_DIR, project.workspace_path);
+        if (wsRoot.startsWith(WORKSPACES_DIR) && fs.existsSync(wsRoot)) {
+          fs.rmSync(wsRoot, { recursive: true, force: true });
+        }
+      } catch (err) {
+        // Log warning but continue with database deletion
+        console.warn(`Could not remove workspace files for ${projectId}:`, err.message);
+      }
+    }
 
     // Delete database records
     db.prepare('DELETE FROM engineer_activities WHERE project_id = ?').run(projectId);

@@ -10,12 +10,16 @@ import {
   Database,
   Cpu,
   Sparkles,
-  Terminal
+  Terminal,
+  Boxes,
+  GraduationCap
 } from 'lucide-react';
 
 export function Sidebar({ currentTab, setCurrentTab, systemStatus }) {
   const navItems = [
+    { id: 'course-lab', label: 'Course-to-Code Lab', icon: GraduationCap, color: 'var(--accent-teal)' },
     { id: 'engineer', label: 'Software Engineer', icon: Terminal, color: 'var(--accent-indigo)' },
+    { id: 'models', label: 'AI Model Library', icon: Boxes, color: 'var(--accent-violet)' },
     { id: 'coding', label: 'Coding Playground', icon: Code2, color: 'var(--accent-amber)' },
     { id: 'agent', label: 'Agent Playground', icon: Bot, color: 'var(--accent-violet)' },
     { id: 'workflows', label: 'Workflow Studio', icon: Workflow, color: 'var(--accent-cyan)' },

@@ -282,7 +282,136 @@ export const api = {
     request(`/engineer/projects/${encodeURIComponent(id)}/ai/repair`, {
       method: 'POST',
       body: JSON.stringify({ error_details, provider, model })
-    })
+    }),
+
+  // --- AI Model Library & Learning Center ---
+  getModelCatalog: (params = {}) => {
+    const q = new URLSearchParams(params).toString();
+    return request(`/models/catalog${q ? `?${q}` : ''}`);
+  },
+  getModelCard: (modelId) => request(`/models/catalog/${encodeURIComponent(modelId)}`),
+  getHardwarePresets: () => request('/models/presets'),
+  recommendModels: (payload) =>
+    request('/models/recommend', {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    }),
+  getLocalModels: () => request('/models/local'),
+  inspectLocalModel: (modelName) =>
+    request('/models/local/inspect', {
+      method: 'POST',
+      body: JSON.stringify({ model_name: modelName })
+    }),
+  deleteLocalModel: (modelName, confirmed = false) =>
+    request(`/models/local/${encodeURIComponent(modelName)}?confirmed=${Boolean(confirmed)}`, {
+      method: 'DELETE'
+    }),
+  testModel: ({ model_name, prompt, system_prompt, category = 'general' }) =>
+    request('/models/test', {
+      method: 'POST',
+      body: JSON.stringify({ model_name, prompt, system_prompt, category })
+    }),
+  saveTestRubric: (testId, rubric) =>
+    request(`/models/test/${encodeURIComponent(testId)}/rubric`, {
+      method: 'POST',
+      body: JSON.stringify(rubric)
+    }),
+  getModelTestRuns: (limit = 20) => request(`/models/test-runs?limit=${limit}`),
+  saveModelComparison: (payload) =>
+    request('/models/comparisons', {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    }),
+  getModelComparisons: () => request('/models/comparisons'),
+  getActiveModelConfig: () => request('/models/config'),
+  setActiveModelConfig: ({ provider, model, task }) =>
+    request('/models/config', {
+      method: 'POST',
+      body: JSON.stringify({ provider, model, task })
+    }),
+  searchHuggingFace: (query = 'coder', limit = 8) =>
+    request(`/models/huggingface?q=${encodeURIComponent(query)}&limit=${limit}`),
+
+  // --- Course-to-Code Lab ---
+  getCourses: () => request('/course-lab/courses'),
+  getCourse: (id) => request(`/course-lab/courses/${id}`),
+  createCourse: (data) =>
+    request('/course-lab/courses', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    }),
+  createModule: (courseId, data) =>
+    request(`/course-lab/courses/${courseId}/modules`, {
+      method: 'POST',
+      body: JSON.stringify(data)
+    }),
+  createLesson: (courseId, moduleId, data) =>
+    request(`/course-lab/courses/${courseId}/modules/${moduleId}/lessons`, {
+      method: 'POST',
+      body: JSON.stringify(data)
+    }),
+  linkCourseDocument: (lessonId, documentId) =>
+    request('/course-lab/lessons/link-document', {
+      method: 'POST',
+      body: JSON.stringify({ lessonId, documentId })
+    }),
+  getCourseSnippets: ({ courseId, lessonId } = {}) => {
+    const params = new URLSearchParams();
+    if (courseId) params.append('courseId', courseId);
+    if (lessonId) params.append('lessonId', lessonId);
+    return request(`/course-lab/snippets?${params.toString()}`);
+  },
+  addCourseSnippet: (data) =>
+    request('/course-lab/snippets', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    }),
+  deleteCourseSnippet: (id) =>
+    request(`/course-lab/snippets/${id}`, {
+      method: 'DELETE'
+    }),
+  assistantLearn: (data) =>
+    request('/course-lab/assistant/learn', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    }),
+  assistantExplainCode: (data) =>
+    request('/course-lab/assistant/explain-code', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    }),
+  assistantDebug: (data) =>
+    request('/course-lab/assistant/debug', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    }),
+  assistantPractise: (data) =>
+    request('/course-lab/assistant/practise', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    }),
+  buildNotebook: (data) =>
+    request('/course-lab/notebooks/build', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    }),
+  validateNotebook: (data) =>
+    request('/course-lab/notebooks/validate', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    }),
+  listCourseNotebooks: (courseId = null) => {
+    const q = courseId ? `?courseId=${encodeURIComponent(courseId)}` : '';
+    return request(`/course-lab/notebooks${q}`);
+  },
+  getCourseNotebook: (id) => request(`/course-lab/notebooks/${id}`),
+  logCourseProgress: (data) =>
+    request('/course-lab/progress', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    }),
+  getCourseProgressSummary: () => request('/course-lab/progress/summary'),
+  getNotebookDownloadUrl: (id) => `/api/course-lab/notebooks/${id}/download`
 };
 
 export default api;

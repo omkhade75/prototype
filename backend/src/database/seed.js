@@ -228,5 +228,124 @@ export function seedDatabase() {
       insertTask.run(t.id, projId, t.title, t.category, t.status, idx);
     });
   }
+
+  // 6. Seed Default Hardware Profile (HP Victus)
+  const profileCount = db.prepare('SELECT COUNT(*) as count FROM model_hardware_profiles').get().count;
+  if (profileCount === 0) {
+    db.prepare(`
+      INSERT INTO model_hardware_profiles (
+        id, name, cpu_info, gpu_info, ram_gb, vram_gb, disk_free_gb, description, is_active
+      ) VALUES (
+        'hp_victus',
+        'HP Victus Laptop (User Current Rig)',
+        'Intel Core i7 (12th/13th Gen, 14 Cores / 20 Threads)',
+        'NVIDIA GeForce RTX 3050 Laptop GPU (6 GB GDDR6 VRAM)',
+        16.0,
+        6.0,
+        150.0,
+        'Balanced gaming & development laptop. 6 GB VRAM comfortably runs models up to 7B/8B (Q4 quantization) with high GPU acceleration.',
+        1
+      )
+    `).run();
+  }
+
+  // 7. Seed Initial App Settings for Active Model
+  const settingsCount = db.prepare('SELECT COUNT(*) as count FROM app_settings').get().count;
+  if (settingsCount === 0) {
+    const insertSetting = db.prepare('INSERT OR IGNORE INTO app_settings (key, value) VALUES (?, ?)');
+    insertSetting.run('active_provider', 'ollama');
+    insertSetting.run('active_model', 'llama3');
+    insertSetting.run('active_task', 'coding');
+  }
+
+  // 8. Seed Course Materials (CS106B Programming Abstractions & Algorithms)
+  const courseCount = db.prepare('SELECT COUNT(*) as count FROM course_materials').get().count;
+  if (courseCount === 0) {
+    const courseId = 'course_cs106b';
+    db.prepare(`
+      INSERT INTO course_materials (id, title, code, description)
+      VALUES (?, ?, ?, ?)
+    `).run(
+      courseId,
+      'CS106B: Programming Abstractions & Algorithmic Design',
+      'CS106B',
+      'Fundamental principles of software design, algorithmic complexity, recursion, dynamic programming, priority queues, and graph algorithms.'
+    );
+
+    // Seed Modules
+    const mod1Id = 'mod_recursion';
+    const mod2Id = 'mod_graphs';
+    db.prepare(`INSERT INTO course_modules (id, course_id, title, order_index, description) VALUES (?, ?, ?, ?, ?)`).run(
+      mod1Id, courseId, 'Module 1: Recursion & Backtracking', 0, 'Call stack visualization, base cases, and state-space exploration.'
+    );
+    db.prepare(`INSERT INTO course_modules (id, course_id, title, order_index, description) VALUES (?, ?, ?, ?, ?)`).run(
+      mod2Id, courseId, 'Module 2: Graph Algorithms & Heaps', 1, 'Adjacency structures, priority queues, and Dijkstra shortest path.'
+    );
+
+    // Seed Lessons
+    const les1Id = 'les_recursion_stack';
+    db.prepare(`
+      INSERT INTO course_lessons (
+        id, module_id, course_id, title, order_index, content, assignment_instructions, status
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `).run(
+      les1Id,
+      mod1Id,
+      courseId,
+      'Recursion Mechanics & Call Stack Depth',
+      0,
+      'Recursion solves problems by dividing them into self-similar subproblems. Every recursive function requires: 1) One or more base cases that return without recursing, and 2) A recursive step that makes progress toward the base case.',
+      'Assignment 1: Implement a recursive power function power(base, exp) in O(log N) time using binary exponentiation.',
+      'completed'
+    );
+
+    const les2Id = 'les_dijkstra';
+    db.prepare(`
+      INSERT INTO course_lessons (
+        id, module_id, course_id, title, order_index, content, assignment_instructions, status
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `).run(
+      les2Id,
+      mod2Id,
+      courseId,
+      'Dijkstra Shortest Path with Min-Heaps',
+      0,
+      "Dijkstra's algorithm finds the shortest path from a starting node to all other nodes in a weighted graph with non-negative edge weights. Using a min-heap priority queue, it achieves O((V + E) log V) time complexity.",
+      'Assignment 2: Implement shortest_path(graph, start_node) using heapq in Python and return distance dictionary.',
+      'in_progress'
+    );
+
+    // Seed Snippets
+    db.prepare(`
+      INSERT INTO course_snippets (id, lesson_id, course_id, title, language, code, explanation, tags_json, source_section)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `).run(
+      'snip_pow',
+      les1Id,
+      courseId,
+      'Binary Exponentiation (O(log n))',
+      'python',
+      `def fast_power(base: float, exp: int) -> float:\n    """Computes base^exp in O(log n) time using binary exponentiation."""\n    if exp == 0:\n        return 1.0\n    if exp < 0:\n        return 1.0 / fast_power(base, -exp)\n    \n    half = fast_power(base, exp // 2)\n    if exp % 2 == 0:\n        return half * half\n    else:\n        return half * half * base\n`,
+      'Calculates power by halving exponent at each recursive depth.',
+      JSON.stringify(['recursion', 'divide-and-conquer', 'math']),
+      'Lecture 2: Recursion Strategies'
+    );
+
+    db.prepare(`
+      INSERT INTO course_snippets (id, lesson_id, course_id, title, language, code, explanation, tags_json, source_section)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `).run(
+      'snip_dijkstra',
+      les2Id,
+      courseId,
+      "Dijkstra's Algorithm Implementation",
+      'python',
+      `import heapq\n\ndef dijkstra(graph: dict, start: str) -> dict:\n    """Returns shortest distance from start node to all reachable nodes."""\n    distances = {node: float('inf') for node in graph}\n    distances[start] = 0\n    pq = [(0, start)]  # (current_distance, node)\n    \n    while pq:\n        curr_dist, u = heapq.heappop(pq)\n        if curr_dist > distances[u]:\n            continue\n            \n        for v, weight in graph[u].items():\n            distance = curr_dist + weight\n            if distance < distances[v]:\n                distances[v] = distance\n                heapq.heappush(pq, (distance, v))\n                \n    return distances\n`,
+      'Min-heap Dijkstra with lazy deletion for shortest path routing.',
+      JSON.stringify(['graphs', 'heap', 'greedy', 'dijkstra']),
+      'Lecture 7: Shortest Paths'
+    );
+  }
 }
+
 

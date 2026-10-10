@@ -179,11 +179,13 @@ test('Software Engineer Backend Service & Sandboxed Workspace Suite', async (t) 
     assert.strictEqual(buf.toString('utf8'), 'SQLite format 3\0');
   });
 
-  await t.test('deleteProject cleans up project record', () => {
-    const deleted = EngineerService.deleteProject(testProjectId);
+  await t.test('deleteProject cleans up project record and workspace files', () => {
+    const wsRoot = EngineerService.getWorkspaceRoot(testProjectId);
+    const deleted = EngineerService.deleteProject(testProjectId, { deleteFiles: true });
     assert.strictEqual(deleted, true);
 
     const check = EngineerService.getProject(testProjectId);
     assert.strictEqual(check, null);
+    assert.strictEqual(fs.existsSync(wsRoot), false);
   });
 });

@@ -2,6 +2,7 @@ import crypto from 'crypto';
 import { db } from '../database/db.js';
 import { DocumentService } from './documentService.js';
 import { AIService } from './aiService.js';
+import { ModelService } from './modelService.js';
 
 export class AgentService {
   static getAllRuns() {
@@ -54,26 +55,29 @@ export class AgentService {
     };
   }
 
-  static async executeAgentRun({ message, provider = 'demo', maxSteps = 5 }) {
+  static async executeAgentRun({ message, provider = 'demo', maxSteps = 5, model = null }) {
     if (!message || !message.trim()) {
       throw new Error('Agent prompt message is required.');
     }
+
+    const activeConfig = ModelService.getActiveModelConfig();
+    const resolvedModel = model || (provider === 'ollama' ? (activeConfig.model || 'llama3') : 'deterministic-engine');
 
     const runId = `agent-${crypto.randomUUID()}`;
     const startTime = Date.now();
 
     // 1. Record initial agent run
     db.prepare(`
-      INSERT INTO agent_runs (id, user_prompt, status, provider, created_at)
-      VALUES (?, ?, 'running', ?, CURRENT_TIMESTAMP)
-    `).run(runId, message, provider);
+      INSERT INTO agent_runs (id, user_prompt, status, provider, model, created_at)
+      VALUES (?, ?, 'running', ?, ?, CURRENT_TIMESTAMP)
+    `).run(runId, message, provider, resolvedModel);
 
     try {
       // 2. Load context chunks from SQLite
       const chunks = DocumentService.getAllChunks();
 
       // 3. Call AI Service agent runner
-      const agentResult = await AIService.runAgent(message, chunks, provider, maxSteps);
+      const agentResult = await AIService.runAgent(message, chunks, provider, maxSteps, resolvedModel);
 
       // 4. Save execution steps in SQLite
       const insertStep = db.prepare(`
@@ -120,7 +124,7 @@ export class AgentService {
         agentResult.total_steps || (agentResult.steps ? agentResult.steps.length : 0),
         agentResult.final_response || '',
         agentResult.error_message || null,
-        agentResult.model || (provider === 'ollama' ? 'llama3' : 'deterministic-engine'),
+        agentResult.model || resolvedModel,
         runId
       );
 
@@ -132,7 +136,7 @@ export class AgentService {
         UPDATE agent_runs
         SET status = 'failed', duration_ms = ?, error_message = ?, model = ?
         WHERE id = ?
-      `).run(totalDuration, err.message, provider === 'ollama' ? 'llama3' : 'deterministic-engine', runId);
+      `).run(totalDuration, err.message, resolvedModel, runId);
 
       throw err;
     }

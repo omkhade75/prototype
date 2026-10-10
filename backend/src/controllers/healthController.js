@@ -10,6 +10,9 @@ export class HealthController {
       const workflowCount = db.prepare('SELECT COUNT(*) as count FROM workflow_definitions').get().count;
       const wfRunCount = db.prepare('SELECT COUNT(*) as count FROM workflow_runs').get().count;
       const agentRunCount = db.prepare('SELECT COUNT(*) as count FROM agent_runs').get().count;
+      const projectCount = db.prepare('SELECT COUNT(*) as count FROM engineer_projects').get()?.count || 0;
+      const courseCount = db.prepare('SELECT COUNT(*) as count FROM course_materials').get()?.count || 0;
+      const activeModelRow = db.prepare("SELECT value FROM app_settings WHERE key = 'active_model'").get();
 
       // 2. Check Python AI Service Health
       const aiHealth = await AIService.getHealth();
@@ -21,7 +24,8 @@ export class HealthController {
             status: 'healthy',
             runtime: `Node.js ${process.version}`,
             uptime_seconds: Math.floor(process.uptime()),
-            port: process.env.PORT || 5000
+            port: process.env.PORT || 5000,
+            active_model: activeModelRow ? activeModelRow.value : 'llama3'
           },
           database: {
             engine: 'SQLite 3 (better-sqlite3)',
@@ -31,7 +35,9 @@ export class HealthController {
               document_chunks: chunkCount,
               workflow_definitions: workflowCount,
               workflow_runs: wfRunCount,
-              agent_runs: agentRunCount
+              agent_runs: agentRunCount,
+              engineer_projects: projectCount,
+              course_materials: courseCount
             }
           },
           ai_service: aiHealth

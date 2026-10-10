@@ -14,8 +14,10 @@ class AgentExecutor:
 
     MAX_TOOL_CALLS = 5
 
-    def __init__(self, provider_name: Optional[str] = None):
+    def __init__(self, provider_name: Optional[str] = None, model: Optional[str] = None):
         self.provider = get_provider(provider_name)
+        if model and hasattr(self.provider, "model"):
+            self.provider.model = model
 
     async def run(
         self,

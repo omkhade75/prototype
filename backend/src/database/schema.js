@@ -211,6 +211,156 @@ export function initializeSchema() {
       FOREIGN KEY (project_id) REFERENCES engineer_projects (id) ON DELETE CASCADE
     );
 
+    -- 15. AI Model Catalog Cache (Offline-first metadata cache)
+    CREATE TABLE IF NOT EXISTS model_catalog_cache (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      publisher TEXT,
+      family TEXT,
+      source TEXT DEFAULT 'ollama',
+      ollama_tag TEXT,
+      parameter_size TEXT,
+      size_display TEXT,
+      quantization TEXT,
+      context_length INTEGER DEFAULT 32768,
+      modalities_json TEXT DEFAULT '["text"]',
+      tasks_json TEXT DEFAULT '[]',
+      description TEXT,
+      license TEXT,
+      ram_min_gb REAL DEFAULT 8.0,
+      vram_rec_gb REAL DEFAULT 6.0,
+      benchmarks_json TEXT DEFAULT '{}',
+      learning_guide_json TEXT DEFAULT '{}',
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+
+    -- 16. Hardware Profiles (HP Victus and custom configurations)
+    CREATE TABLE IF NOT EXISTS model_hardware_profiles (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      cpu_info TEXT,
+      gpu_info TEXT,
+      ram_gb REAL DEFAULT 16.0,
+      vram_gb REAL DEFAULT 6.0,
+      disk_free_gb REAL DEFAULT 100.0,
+      description TEXT,
+      is_active INTEGER DEFAULT 0,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+
+    -- 17. Model Test Runs (Interactive test benchmark traces)
+    CREATE TABLE IF NOT EXISTS model_test_runs (
+      id TEXT PRIMARY KEY,
+      model_name TEXT NOT NULL,
+      provider TEXT NOT NULL DEFAULT 'ollama',
+      prompt TEXT NOT NULL,
+      category TEXT DEFAULT 'general',
+      response_text TEXT,
+      duration_ms REAL DEFAULT 0,
+      tokens_per_second REAL DEFAULT 0,
+      eval_rubric_json TEXT DEFAULT '{}',
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+
+    -- 18. Model Comparison Sessions
+    CREATE TABLE IF NOT EXISTS model_comparisons (
+      id TEXT PRIMARY KEY,
+      title TEXT NOT NULL,
+      models_json TEXT NOT NULL,
+      prompt TEXT,
+      comparison_data_json TEXT NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+
+    -- 19. Application Settings (Active AI model & provider sync)
+    CREATE TABLE IF NOT EXISTS app_settings (
+      key TEXT PRIMARY KEY,
+      value TEXT NOT NULL,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+
+    -- 20. Course Materials Table
+    CREATE TABLE IF NOT EXISTS course_materials (
+      id TEXT PRIMARY KEY,
+      title TEXT NOT NULL,
+      code TEXT,
+      description TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+
+    -- 21. Course Modules Table
+    CREATE TABLE IF NOT EXISTS course_modules (
+      id TEXT PRIMARY KEY,
+      course_id TEXT NOT NULL,
+      title TEXT NOT NULL,
+      order_index INTEGER DEFAULT 0,
+      description TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (course_id) REFERENCES course_materials (id) ON DELETE CASCADE
+    );
+
+    -- 22. Course Lessons Table
+    CREATE TABLE IF NOT EXISTS course_lessons (
+      id TEXT PRIMARY KEY,
+      module_id TEXT NOT NULL,
+      course_id TEXT NOT NULL,
+      title TEXT NOT NULL,
+      order_index INTEGER DEFAULT 0,
+      content TEXT,
+      source_doc_id INTEGER,
+      source_filename TEXT,
+      source_pages_json TEXT DEFAULT '[]',
+      assignment_instructions TEXT,
+      status TEXT CHECK(status IN ('not_started', 'in_progress', 'completed')) DEFAULT 'not_started',
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (module_id) REFERENCES course_modules (id) ON DELETE CASCADE,
+      FOREIGN KEY (course_id) REFERENCES course_materials (id) ON DELETE CASCADE
+    );
+
+    -- 23. Course Snippets (Snippet Scratchpad / Drawer)
+    CREATE TABLE IF NOT EXISTS course_snippets (
+      id TEXT PRIMARY KEY,
+      lesson_id TEXT,
+      course_id TEXT,
+      title TEXT NOT NULL,
+      language TEXT NOT NULL DEFAULT 'python',
+      code TEXT NOT NULL,
+      explanation TEXT,
+      tags_json TEXT DEFAULT '[]',
+      source_section TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+
+    -- 24. Course Notebooks (Generated .ipynb projects)
+    CREATE TABLE IF NOT EXISTS course_notebooks (
+      id TEXT PRIMARY KEY,
+      title TEXT NOT NULL,
+      goal TEXT NOT NULL,
+      language TEXT DEFAULT 'python',
+      course_id TEXT,
+      cells_json TEXT NOT NULL,
+      ipynb_json TEXT NOT NULL,
+      validation_result_json TEXT DEFAULT '{}',
+      source_snippets_json TEXT DEFAULT '[]',
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+
+    -- 25. Course Progress & Student Actions
+    CREATE TABLE IF NOT EXISTS course_progress (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      item_type TEXT NOT NULL,
+      item_id TEXT NOT NULL,
+      action TEXT NOT NULL,
+      score REAL,
+      details_json TEXT DEFAULT '{}',
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+
     -- Indexes for efficient lookup
     CREATE INDEX IF NOT EXISTS idx_chunks_doc_id ON document_chunks(document_id);
     CREATE INDEX IF NOT EXISTS idx_agent_steps_run_id ON agent_steps(run_id);
@@ -221,6 +371,14 @@ export function initializeSchema() {
     CREATE INDEX IF NOT EXISTS idx_learning_quiz_topic ON learning_quiz_attempts(topic_id);
     CREATE INDEX IF NOT EXISTS idx_engineer_tasks_project ON engineer_tasks(project_id);
     CREATE INDEX IF NOT EXISTS idx_engineer_activities_project ON engineer_activities(project_id);
+    CREATE INDEX IF NOT EXISTS idx_model_test_runs_model ON model_test_runs(model_name);
+    CREATE INDEX IF NOT EXISTS idx_course_modules_course ON course_modules(course_id);
+    CREATE INDEX IF NOT EXISTS idx_course_lessons_module ON course_lessons(module_id);
+    CREATE INDEX IF NOT EXISTS idx_course_lessons_course ON course_lessons(course_id);
+    CREATE INDEX IF NOT EXISTS idx_course_snippets_course ON course_snippets(course_id);
+    CREATE INDEX IF NOT EXISTS idx_course_snippets_lesson ON course_snippets(lesson_id);
+    CREATE INDEX IF NOT EXISTS idx_course_notebooks_course ON course_notebooks(course_id);
+    CREATE INDEX IF NOT EXISTS idx_course_progress_item ON course_progress(item_type, item_id);
   `;
 
   db.exec(schemaSql);

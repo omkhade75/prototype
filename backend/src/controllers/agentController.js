@@ -24,7 +24,7 @@ export class AgentController {
 
   static async runAgent(req, res, next) {
     try {
-      const { message, provider, maxSteps } = req.body;
+      const { message, provider, maxSteps, model } = req.body;
       if (!message || !message.trim()) {
         return res.status(400).json({
           success: false,
@@ -35,7 +35,8 @@ export class AgentController {
       const run = await AgentService.executeAgentRun({
         message,
         provider: provider || 'demo',
-        maxSteps: maxSteps ? Number(maxSteps) : 5
+        maxSteps: maxSteps ? Number(maxSteps) : 5,
+        model: model || null
       });
 
       res.status(201).json({ success: true, data: run });

@@ -1,7 +1,7 @@
 import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api import health, documents, rag, agent, tasks, coding, engineer
+from app.api import health, documents, rag, agent, tasks, coding, engineer, models, course_lab
 
 app = FastAPI(
     title="ORBIT AI - Python AI Service",
@@ -26,6 +26,8 @@ app.include_router(agent.router, prefix="/agent", tags=["Agent"])
 app.include_router(tasks.router, prefix="/tasks", tags=["Tasks"])
 app.include_router(coding.router, prefix="/coding", tags=["Coding & DSA"])
 app.include_router(engineer.router, tags=["Software Engineer Agent"])
+app.include_router(models.router, tags=["AI Model Library"])
+app.include_router(course_lab.router, tags=["Course-to-Code Lab"])
 
 @app.get("/")
 def root():

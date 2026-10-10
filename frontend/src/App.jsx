@@ -7,6 +7,8 @@ import WorkflowStudio from './pages/WorkflowStudio';
 import RunsEvaluations from './pages/RunsEvaluations';
 import SettingsHealth from './pages/SettingsHealth';
 import SoftwareEngineer from './pages/SoftwareEngineer';
+import ModelLibrary from './pages/ModelLibrary';
+import CourseLab from './pages/CourseLab';
 import { api } from './services/api';
 import { 
   BookOpen, 
@@ -21,7 +23,9 @@ import {
   Database,
   Sun,
   Moon,
-  Terminal
+  Terminal,
+  Boxes,
+  GraduationCap
 } from 'lucide-react';
 
 export function App() {
@@ -60,11 +64,23 @@ export function App() {
   }, []);
 
   const tabConfig = {
+    'course-lab': {
+      title: 'Course-to-Code Lab',
+      subtitle: 'Course Materials, Structured Lesson Scaffolding & Jupyter Notebook Generator',
+      icon: GraduationCap,
+      color: 'var(--accent-teal)'
+    },
     engineer: {
       title: 'AI Software Engineer',
       subtitle: 'Autonomous Full-Stack Local Agent & Workspace Sandbox',
       icon: Terminal,
       color: 'var(--accent-indigo)'
+    },
+    models: {
+      title: 'AI Model Library & Learning Center',
+      subtitle: 'Discover, Install, Benchmark, and Compare Local & Open-Weight AI Architectures',
+      icon: Boxes,
+      color: 'var(--accent-violet)'
     },
     knowledge: {
       title: 'Knowledge Hub',
@@ -194,7 +210,9 @@ export function App() {
 
         {/* Dynamic Page Container */}
         <section className="content-area">
+          {currentTab === 'course-lab' && <CourseLab systemStatus={systemStatus} />}
           {currentTab === 'engineer' && <SoftwareEngineer systemStatus={systemStatus} />}
+          {currentTab === 'models' && <ModelLibrary systemStatus={systemStatus} onRefresh={fetchHealth} />}
           {currentTab === 'knowledge' && <KnowledgeHub />}
           {currentTab === 'coding' && <CodingPlayground systemStatus={systemStatus} />}
           {currentTab === 'agent' && <AgentPlayground systemStatus={systemStatus} onRefresh={fetchHealth} />}

@@ -49,7 +49,8 @@ export class EngineerController {
 
   static async deleteProject(req, res) {
     try {
-      const ok = EngineerService.deleteProject(req.params.id);
+      const deleteFiles = req.query.delete_files === 'true' || req.body?.delete_files === true;
+      const ok = EngineerService.deleteProject(req.params.id, { deleteFiles });
       res.json({ success: ok });
     } catch (err) {
       res.status(500).json({ success: false, error: err.message });
