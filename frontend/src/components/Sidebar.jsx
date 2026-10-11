@@ -1,4 +1,5 @@
 import React from 'react';
+import { OrbitLogo } from './OrbitLogo';
 import { 
   BookOpen, 
   Code2,
@@ -39,8 +40,8 @@ export function Sidebar({ currentTab, setCurrentTab, systemStatus }) {
     <aside className="sidebar">
       {/* Brand Header */}
       <div className="sidebar-header">
-        <div className="brand-badge">
-          <Sparkles size={16} />
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', filter: 'drop-shadow(0 0 12px rgba(168, 85, 247, 0.45))' }}>
+          <OrbitLogo size={36} animated={true} />
         </div>
         <div className="brand-info">
           <div className="brand-title">
@@ -61,11 +62,31 @@ export function Sidebar({ currentTab, setCurrentTab, systemStatus }) {
               key={item.id}
               className={`nav-link ${isActive ? 'active' : ''}`}
               onClick={() => setCurrentTab(item.id)}
+              style={isActive ? { 
+                borderColor: item.color, 
+                boxShadow: `0 4px 20px -2px ${item.color}40, inset 0 1px 0 rgba(255, 255, 255, 0.2)` 
+              } : {}}
             >
-              <span className="nav-icon">
-                <Icon size={18} />
+              <span 
+                className="nav-icon"
+                style={{ 
+                  color: item.color,
+                  background: isActive ? `color-mix(in srgb, ${item.color} 24%, transparent)` : 'rgba(255, 255, 255, 0.04)',
+                  border: `1px solid ${isActive ? item.color : 'rgba(255, 255, 255, 0.08)'}`,
+                  padding: '5px',
+                  borderRadius: '8px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: isActive ? `0 0 12px ${item.color}45` : 'none',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                <Icon size={16} />
               </span>
-              <span>{item.label}</span>
+              <span style={{ fontWeight: isActive ? 700 : 500, color: isActive ? 'var(--text-main)' : 'var(--text-secondary)' }}>
+                {item.label}
+              </span>
             </button>
           );
         })}

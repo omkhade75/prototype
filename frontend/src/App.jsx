@@ -158,19 +158,19 @@ export function App() {
           <div className="topbar-left">
             <div 
               style={{
-                width: '36px',
-                height: '36px',
-                borderRadius: '10px',
-                background: 'rgba(255, 255, 255, 0.05)',
-                border: '1px solid var(--border-glass)',
+                width: '38px',
+                height: '38px',
+                borderRadius: '11px',
+                background: `color-mix(in srgb, ${activeTabMeta.color} 20%, transparent)`,
+                border: `1px solid ${activeTabMeta.color}`,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 color: activeTabMeta.color,
-                boxShadow: '0 0 16px rgba(0, 0, 0, 0.2)'
+                boxShadow: `0 0 18px -2px ${activeTabMeta.color}55, inset 0 1px 0 rgba(255, 255, 255, 0.2)`
               }}
             >
-              <TabIcon size={18} />
+              <TabIcon size={19} />
             </div>
             <div>
               <h2 className="page-title">{activeTabMeta.title}</h2>

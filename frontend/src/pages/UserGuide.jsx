@@ -507,14 +507,16 @@ export function UserGuide({ setCurrentTab }) {
       <section className="panel-glass" style={{ padding: '1.75rem 2rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
           <div>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', padding: '0.2rem 0.65rem', borderRadius: '16px', background: 'rgba(37, 99, 235, 0.12)', border: '1px solid rgba(37, 99, 235, 0.3)', color: 'var(--accent-blue-light)', fontSize: '0.76rem', fontWeight: 600, marginBottom: '0.65rem' }}>
-              <Compass size={13} />
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem', padding: '0.25rem 0.85rem', borderRadius: '20px', background: 'linear-gradient(90deg, rgba(236, 72, 153, 0.18) 0%, rgba(139, 92, 246, 0.18) 100%)', border: '1px solid rgba(236, 72, 153, 0.4)', color: '#f472b6', fontSize: '0.78rem', fontWeight: 700, marginBottom: '0.85rem' }}>
+              <Sparkles size={14} color="#ec4899" />
               <span>Complete User Guide & Onboarding Manual</span>
+              <span style={{ opacity: 0.4 }}>•</span>
+              <span style={{ color: '#22d3ee' }}>100% Offline Accessible</span>
             </div>
-            <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.02em', marginBottom: '0.5rem' }}>
-              Start Here: How to Use ORBIT AI
+            <h1 style={{ fontSize: '2.1rem', fontWeight: 850, color: 'var(--text-main)', letterSpacing: '-0.025em', marginBottom: '0.5rem' }}>
+              Start Here: <span className="gradient-text">How to Use ORBIT AI</span>
             </h1>
-            <p style={{ fontSize: '0.92rem', color: 'var(--text-secondary)', maxWidth: '850px', lineHeight: 1.55 }}>
+            <p style={{ fontSize: '0.94rem', color: 'var(--text-secondary)', maxWidth: '850px', lineHeight: 1.6 }}>
               Learn what each section of ORBIT does, choose the right tool for your specific learning or software engineering goal, and follow step-by-step beginner tutorials.
             </p>
           </div>
@@ -529,92 +531,124 @@ export function UserGuide({ setCurrentTab }) {
         </div>
 
         {/* Section Navigation Tabs */}
-        <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1.5rem', flexWrap: 'wrap', borderTop: '1px solid var(--border-glass-subtle)', paddingTop: '1rem' }}>
+        <div style={{ display: 'flex', gap: '0.6rem', marginTop: '1.5rem', flexWrap: 'wrap', borderTop: '1px solid var(--border-glass-subtle)', paddingTop: '1.15rem' }}>
           {[
-            { id: 'overview', label: 'A. System Overview' },
-            { id: 'tabs', label: 'B. All Tabs Guide (10 Sections)' },
-            { id: 'goals', label: 'C. Which Feature Should I Use?' },
-            { id: 'tutorials', label: 'D. Beginner Tutorials' },
-            { id: 'offline', label: 'E. Offline & Docker Matrix' },
-            { id: 'troubleshooting', label: 'F. Troubleshooting' }
-          ].map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveSection(tab.id)}
-              style={{
-                padding: '0.45rem 0.9rem',
-                borderRadius: '6px',
-                fontSize: '0.8rem',
-                fontWeight: 600,
-                background: activeSection === tab.id ? 'var(--accent-violet)' : 'var(--bg-secondary)',
-                color: activeSection === tab.id ? '#ffffff' : 'var(--text-secondary)',
-                border: '1px solid ' + (activeSection === tab.id ? 'var(--accent-violet)' : 'var(--border-glass)'),
-                cursor: 'pointer',
-                transition: 'all 0.15s ease'
-              }}
-            >
-              {tab.label}
-            </button>
-          ))}
+            { id: 'overview', label: 'A. System Overview', color: 'var(--accent-violet)', glow: 'rgba(139, 92, 246, 0.35)' },
+            { id: 'tabs', label: 'B. All Tabs Guide (10 Sections)', color: 'var(--accent-cyan)', glow: 'rgba(6, 182, 212, 0.35)' },
+            { id: 'goals', label: 'C. Which Feature Should I Use?', color: 'var(--accent-amber)', glow: 'rgba(245, 158, 11, 0.35)' },
+            { id: 'tutorials', label: 'D. Beginner Tutorials', color: 'var(--accent-emerald)', glow: 'rgba(16, 185, 129, 0.35)' },
+            { id: 'offline', label: 'E. Offline & Docker Matrix', color: 'var(--accent-magenta)', glow: 'rgba(236, 72, 153, 0.35)' },
+            { id: 'troubleshooting', label: 'F. Troubleshooting', color: 'var(--accent-rose)', glow: 'rgba(239, 68, 68, 0.35)' }
+          ].map((tab) => {
+            const isTabActive = activeSection === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveSection(tab.id)}
+                style={{
+                  padding: '0.5rem 1rem',
+                  borderRadius: '10px',
+                  fontSize: '0.8rem',
+                  fontWeight: 700,
+                  background: isTabActive ? tab.color : 'rgba(255, 255, 255, 0.05)',
+                  color: isTabActive ? '#ffffff' : 'var(--text-secondary)',
+                  border: `1px solid ${isTabActive ? tab.color : 'var(--border-glass)'}`,
+                  boxShadow: isTabActive ? `0 4px 18px ${tab.glow}, inset 0 1px 0 rgba(255, 255, 255, 0.3)` : 'none',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.4rem'
+                }}
+              >
+                {tab.label}
+              </button>
+            );
+          })}
         </div>
       </section>
 
       {/* SECTION A: Overview */}
       {activeSection === 'overview' && (
-        <section className="panel-glass" style={{ padding: '1.75rem 2rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-          <h2 style={{ fontSize: '1.3rem', fontWeight: 700, color: 'var(--text-main)' }}>
+        <section className="panel-glass" style={{ padding: '2rem 2.25rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+          <h2 style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.02em' }}>
             Section A: ORBIT AI Architecture & Integrated Workflows
           </h2>
-          <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+          <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
             ORBIT AI is engineered as a three-tier local architecture running entirely on your computer:
           </p>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem' }}>
-            <div style={{ padding: '1.1rem', borderRadius: '8px', background: 'var(--bg-secondary)', border: '1px solid var(--border-glass)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-                <div style={{ width: '28px', height: '28px', borderRadius: '6px', background: 'rgba(59, 130, 246, 0.15)', color: 'var(--accent-blue)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Laptop size={16} />
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem' }}>
+            <div style={{ 
+              padding: '1.25rem', 
+              borderRadius: '14px', 
+              background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.12) 0%, rgba(18, 18, 22, 0.75) 100%)', 
+              border: '1px solid rgba(6, 182, 212, 0.35)',
+              boxShadow: '0 8px 24px -4px rgba(6, 182, 212, 0.18), inset 0 1px 1px rgba(255, 255, 255, 0.2)' 
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.65rem' }}>
+                <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'rgba(6, 182, 212, 0.25)', color: '#22d3ee', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Laptop size={18} />
                 </div>
-                <h4 style={{ fontSize: '0.92rem', fontWeight: 700, color: 'var(--text-main)' }}>1. React + Vite Frontend</h4>
+                <h4 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#22d3ee' }}>1. React + Vite Frontend</h4>
               </div>
-              <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+              <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: 1.55 }}>
                 Listening on <strong>Port 3000</strong>. Built purely with React JSX and Glassy Dark CSS. Provides navigation, interactive editors, DAG workflows, and model benchmark comparisons.
               </p>
             </div>
 
-            <div style={{ padding: '1.1rem', borderRadius: '8px', background: 'var(--bg-secondary)', border: '1px solid var(--border-glass)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-                <div style={{ width: '28px', height: '28px', borderRadius: '6px', background: 'rgba(16, 185, 129, 0.15)', color: 'var(--accent-emerald)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Database size={16} />
+            <div style={{ 
+              padding: '1.25rem', 
+              borderRadius: '14px', 
+              background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(18, 18, 22, 0.75) 100%)', 
+              border: '1px solid rgba(16, 185, 129, 0.35)',
+              boxShadow: '0 8px 24px -4px rgba(16, 185, 129, 0.18), inset 0 1px 1px rgba(255, 255, 255, 0.2)' 
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.65rem' }}>
+                <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'rgba(16, 185, 129, 0.25)', color: '#34d399', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Database size={18} />
                 </div>
-                <h4 style={{ fontSize: '0.92rem', fontWeight: 700, color: 'var(--text-main)' }}>2. Node.js Express Gateway</h4>
+                <h4 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#34d399' }}>2. Node.js Express Gateway</h4>
               </div>
-              <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+              <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: 1.55 }}>
                 Listening on <strong>Port 5000</strong>. Hosts REST APIs, manages sandboxed project workspaces, coordinates preview processes, and persists data to SQLite WAL mode.
               </p>
             </div>
 
-            <div style={{ padding: '1.1rem', borderRadius: '8px', background: 'var(--bg-secondary)', border: '1px solid var(--border-glass)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-                <div style={{ width: '28px', height: '28px', borderRadius: '6px', background: 'rgba(139, 92, 246, 0.15)', color: 'var(--accent-violet)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Cpu size={16} />
+            <div style={{ 
+              padding: '1.25rem', 
+              borderRadius: '14px', 
+              background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.12) 0%, rgba(18, 18, 22, 0.75) 100%)', 
+              border: '1px solid rgba(139, 92, 246, 0.35)',
+              boxShadow: '0 8px 24px -4px rgba(139, 92, 246, 0.18), inset 0 1px 1px rgba(255, 255, 255, 0.2)' 
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.65rem' }}>
+                <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'rgba(139, 92, 246, 0.25)', color: '#c084fc', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Cpu size={18} />
                 </div>
-                <h4 style={{ fontSize: '0.92rem', fontWeight: 700, color: 'var(--text-main)' }}>3. Python FastAPI AI Service</h4>
+                <h4 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#c084fc' }}>3. Python FastAPI AI Service</h4>
               </div>
-              <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+              <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: 1.55 }}>
                 Listening on <strong>Port 8000</strong>. Implements TF-IDF keyword retrieval, code parsing via ast.parse, DSA tutor pedagogy, and interfaces with local Ollama daemon on Port 11434.
               </p>
             </div>
           </div>
 
-          <div style={{ padding: '1rem', borderRadius: '8px', background: 'rgba(124, 58, 237, 0.08)', border: '1px solid rgba(124, 58, 237, 0.25)' }}>
-            <h4 style={{ fontSize: '0.88rem', fontWeight: 700, color: 'var(--accent-violet-light)', marginBottom: '0.35rem' }}>
+          <div style={{ 
+            padding: '1.15rem 1.35rem', 
+            borderRadius: '12px', 
+            background: 'linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(124, 58, 237, 0.1) 100%)', 
+            border: '1px solid rgba(236, 72, 153, 0.35)',
+            boxShadow: '0 4px 20px -2px rgba(236, 72, 153, 0.15)'
+          }}>
+            <h4 style={{ fontSize: '0.92rem', fontWeight: 800, color: '#f472b6', marginBottom: '0.45rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <Sparkles size={16} color="#ec4899" />
               How You Move Between Sections in ORBIT
             </h4>
-            <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: 1.55 }}>
-              • <strong>Learn $\rightarrow$ Code:</strong> Study a topic in <em>Course-to-Code Lab</em>, harvest code snippets, and send them directly to the <em>Coding Playground</em>.<br />
-              • <strong>Model Selection $\rightarrow$ Generation:</strong> Set your active model in the <em>AI Model Library</em>, and it automatically powers the <em>Agent Playground</em> and <em>Software Engineer</em>.<br />
-              • <strong>Observe $\rightarrow$ Audit:</strong> Run any agent task or workflow, and immediately inspect execution logs in <em>Runs & Evaluations</em>.
+            <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+              • <strong style={{ color: '#22d3ee' }}>Learn $\rightarrow$ Code:</strong> Study a topic in <em>Course-to-Code Lab</em>, harvest code snippets, and send them directly to the <em>Coding Playground</em>.<br />
+              • <strong style={{ color: '#c084fc' }}>Model Selection $\rightarrow$ Generation:</strong> Set your active model in the <em>AI Model Library</em>, and it automatically powers the <em>Agent Playground</em> and <em>Software Engineer</em>.<br />
+              • <strong style={{ color: '#34d399' }}>Observe $\rightarrow$ Audit:</strong> Run any agent task or workflow, and immediately inspect execution logs in <em>Runs & Evaluations</em>.
             </p>
           </div>
         </section>
@@ -634,24 +668,29 @@ export function UserGuide({ setCurrentTab }) {
             </div>
 
             <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-              {tabGuides.map((tg) => (
-                <button
-                  key={tg.id}
-                  onClick={() => setExpandedTabId(tg.id)}
-                  style={{
-                    padding: '0.35rem 0.65rem',
-                    borderRadius: '6px',
-                    fontSize: '0.74rem',
-                    fontWeight: 600,
-                    background: expandedTabId === tg.id ? 'var(--accent-indigo)' : 'var(--bg-secondary)',
-                    color: expandedTabId === tg.id ? '#ffffff' : 'var(--text-secondary)',
-                    border: '1px solid ' + (expandedTabId === tg.id ? 'var(--accent-indigo)' : 'var(--border-glass)'),
-                    cursor: 'pointer'
-                  }}
-                >
-                  {tg.name}
-                </button>
-              ))}
+              {tabGuides.map((tg) => {
+                const isSelected = expandedTabId === tg.id;
+                return (
+                  <button
+                    key={tg.id}
+                    onClick={() => setExpandedTabId(tg.id)}
+                    style={{
+                      padding: '0.4rem 0.75rem',
+                      borderRadius: '8px',
+                      fontSize: '0.76rem',
+                      fontWeight: 700,
+                      background: isSelected ? tg.color : 'rgba(255, 255, 255, 0.05)',
+                      color: isSelected ? '#ffffff' : 'var(--text-secondary)',
+                      border: `1px solid ${isSelected ? tg.color : 'var(--border-glass)'}`,
+                      boxShadow: isSelected ? `0 4px 16px ${tg.color}45, inset 0 1px 0 rgba(255, 255, 255, 0.3)` : 'none',
+                      cursor: 'pointer',
+                      transition: 'all 0.18s ease'
+                    }}
+                  >
+                    {tg.name}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
@@ -724,8 +763,8 @@ export function UserGuide({ setCurrentTab }) {
 
                 {/* Example, Success & Error Handling */}
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem' }}>
-                  <div style={{ padding: '0.85rem', borderRadius: '6px', background: 'rgba(59, 130, 246, 0.06)', border: '1px solid rgba(59, 130, 246, 0.2)' }}>
-                    <div style={{ fontSize: '0.76rem', fontWeight: 700, color: 'var(--accent-blue-light)', marginBottom: '0.25rem' }}>
+                  <div style={{ padding: '0.85rem', borderRadius: '8px', background: 'rgba(139, 92, 246, 0.08)', border: '1px solid rgba(139, 92, 246, 0.3)' }}>
+                    <div style={{ fontSize: '0.76rem', fontWeight: 700, color: 'var(--accent-violet-light)', marginBottom: '0.25rem' }}>
                       Realistic Example
                     </div>
                     <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', lineHeight: 1.45 }}>
