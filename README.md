@@ -1,554 +1,689 @@
 <div align="center">
 
-# 🪐 ORBIT AI
-### Local AI Engineering, Coding Tutor, Software Engineer Agent, Model Library & Course-to-Code Lab
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- ORBIT AI — README                                                      -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
 
-[![Node.js](https://img.shields.io/badge/Node.js-v22_LTS-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-v0.110+-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
-[![React](https://img.shields.io/badge/React-v18-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
-[![SQLite](https://img.shields.io/badge/SQLite-WAL_Mode-003B57?style=for-the-badge&logo=sqlite&logoColor=white)](https://www.sqlite.org/)
-[![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org/)
-[![Docker](https://img.shields.io/badge/Docker-Sandboxed_Runtime-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
+<br>
 
-<p align="center">
-  <strong>A 100% free, local-first AI engineering workstation built for computer science students and developers.</strong><br>
-  Explore genuine RAG retrieval, bounded local agents, interactive C++/Python DSA tutoring, an autonomous AI Software Engineer that builds real full-stack web applications with genuine SQLite databases, a local AI Model Library, and an integrated Course-to-Code Lab generating validated Jupyter notebooks.
-</p>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/badge/🪐_ORBIT_AI-Local_AI_Engineering_Workspace-blueviolet?style=for-the-badge&labelColor=0d1117&color=6f42c1">
+  <img alt="ORBIT AI" src="https://img.shields.io/badge/🪐_ORBIT_AI-Local_AI_Engineering_Workspace-blueviolet?style=for-the-badge&labelColor=0d1117&color=6f42c1">
+</picture>
 
-[Quick Start](#-quick-start-in-1-click) •
-[Architecture](#-system-architecture) •
-[Core Modules](#-core-modules) •
-[HP Victus Setup Guide](#-hp-victus-laptop-setup--hardware-profile) •
-[Offline-First Matrix](#-offline-first-capabilities--dependency-matrix) •
-[Testing](#-automated-testing)
+### *Your Personal AI-Powered Coding Studio — 100% Free, 100% Local, Zero Cloud APIs*
+
+<br>
+
+[![Node.js](https://img.shields.io/badge/Node.js-22_LTS-339933?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org/)
+[![React](https://img.shields.io/badge/React-18-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-009688?style=flat-square&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![SQLite](https://img.shields.io/badge/SQLite-WAL_Mode-003B57?style=flat-square&logo=sqlite&logoColor=white)](https://www.sqlite.org/)
+[![Ollama](https://img.shields.io/badge/Ollama-Local_LLM-000000?style=flat-square&logo=ollama&logoColor=white)](https://ollama.com/)
+[![Docker](https://img.shields.io/badge/Docker-Sandbox-2496ED?style=flat-square&logo=docker&logoColor=white)](https://www.docker.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](LICENSE)
+[![Tests](https://img.shields.io/badge/Tests-57_Node_|_97_Python-brightgreen?style=flat-square&logo=checkmarx&logoColor=white)](#-test-results)
+
+<br>
+
+> **ORBIT AI** is a full-stack, local-first AI engineering workstation designed for **computer science students** and **developers**. It combines a document-grounded knowledge hub, an autonomous AI software engineer, an interactive DSA tutor, a model testing lab, and a course-to-code notebook generator — all running on your own laptop with **zero paid subscriptions**.
+
+<br>
+
+[**🚀 Get Started in 2 Minutes**](#-get-started-in-2-minutes) &nbsp;•&nbsp;
+[**✨ Features**](#-what-can-orbit-ai-do) &nbsp;•&nbsp;
+[**🏗️ Architecture**](#%EF%B8%8F-architecture) &nbsp;•&nbsp;
+[**🧪 Tests**](#-test-results) &nbsp;•&nbsp;
+[**📖 FAQ**](#-frequently-asked-questions)
 
 ---
 
 </div>
 
-## 📑 Table of Contents
-- [✨ Core Capabilities](#-core-capabilities)
-- [🚀 Quick Start in 1-Click](#-quick-start-in-1-click)
-- [🧩 Core Modules](#-core-modules)
-  - [1. Knowledge Hub (Document RAG)](#1-knowledge-hub-document-rag)
-  - [2. Agent Playground (Bounded Tool Calling)](#2-agent-playground-bounded-tool-calling)
-  - [3. Visual Workflow Studio (React Flow)](#3-visual-workflow-studio-react-flow)
-  - [4. Coding Playground & DSA Tutor (C++ & Python)](#4-coding-playground--dsa-tutor-c--python)
-  - [5. PDF-Based DSA Tutor & Personalized Learning Dashboard](#5-pdf-based-dsa-tutor--personalized-learning-dashboard)
-  - [6. ORBIT AI Software Engineer Agent](#6-orbit-ai-software-engineer-agent)
-  - [7. AI Model Library & Learning Center](#7-ai-model-library--learning-center)
-  - [8. Course-to-Code Lab (Jupyter & Colab)](#8-course-to-code-lab-jupyter--colab)
-  - [9. Runs, Evaluations & System Health](#9-runs-evaluations--system-health)
-- [🏗️ System Architecture](#-system-architecture)
-- [💻 HP Victus Laptop Setup & Hardware Profile](#-hp-victus-laptop-setup--hardware-profile)
-- [📶 Offline-First Capabilities & Dependency Matrix](#-offline-first-capabilities--dependency-matrix)
-- [💡 Two-Tier Execution: Demo vs. Ollama](#-two-tier-execution-demo-vs-ollama)
-- [🛡️ Docker Sandboxing & Security](#-docker-sandboxing--security)
-- [🧪 Automated Testing](#-automated-testing)
-- [📂 Project Directory Tree](#-project-directory-tree)
-- [📄 License](#-license)
+<br>
 
----
+## 🚀 Get Started in 2 Minutes
 
-## ✨ Core Capabilities
+> **Works on any Windows laptop — no GPU required, no cloud account needed.**
 
-- 🔒 **Zero Paid Cloud APIs**: 100% functional out-of-the-box in **Demo Mode** without an OpenAI API key, cloud credits, or paid subscriptions.
-- 🦙 **Native Ollama Local AI Integration**: Seamless connection to local LLMs (`llama3`, `mistral`, `qwen2.5`, `phi3`) with real function calling and strictly **zero silent fallback**.
-- 🛠️ **Autonomous AI Software Engineer**: Translates natural-language project specifications into runnable full-stack web applications with genuine SQLite databases, automated test suites, and live development previews.
-- 🎓 **Interactive C++ & Python DSA Tutor**: Learn, debug, and practice LeetCode and Data Structures & Algorithms with structured explanations, pseudocode, line-by-line walk-throughs, and dry-run traces.
-- 📚 **Course-to-Code Lab**: Turn university course slides, syllabus PDFs, and code snippets into interactive lessons and valid, executable Jupyter Notebooks (`.ipynb` v4) with Google Colab compatibility.
-- 🧠 **AI Model Library & Learning Center**: Curated catalog of open-weights models tailored to specific hardware profiles (like HP Victus laptops), test benchmarking, and side-by-side comparison rubrics.
-- 📄 **PDF-Grounded Learning**: Ingest DSA textbooks and university lecture notes; learn directly from specific sections with page-aware citations.
-- 🐳 **Secure Container Sandboxing**: Enforces Docker container execution with `--network=none`, `-m 512m`, `--cpus 1.0`, `--pids-limit 64`, and dropped capabilities.
-- 📐 **Transparent Mathematical RAG**: Pure-Python **TF-IDF + Cosine Similarity** keyword retrieval with verifiable scoring and citations.
-- 🔀 **Visual Workflow DAGs**: Drag, connect, and execute node-based workflows using React Flow with Kahn's topological sort and genuine human-in-the-loop approvals.
-- 🚫 **Strictly No TypeScript**: Implemented purely in clean JavaScript (React JSX, Node.js ES Modules) and Python 3.11+.
+### Step 0 — Install Prerequisites
 
----
+You need two things installed. If you already have them, skip ahead.
 
-## 🚀 Quick Start in 1-Click
+| Tool | Version | Download Link | How to Check |
+| :--- | :--- | :--- | :--- |
+| **Node.js** | v18 or newer (v22 LTS recommended) | [nodejs.org/en/download](https://nodejs.org/en/download/) | `node --version` |
+| **Python** | v3.11 or newer | [python.org/downloads](https://www.python.org/downloads/) | `python --version` |
 
-### System Prerequisites
-- **Node.js** (v18+ or v22 LTS recommended)
-- **Python** (v3.11+)
-- *(Optional)* [Ollama](https://ollama.com/) for local model inference (`ollama serve`)
-- *(Optional)* [Docker Desktop](https://www.docker.com/) for container-isolated test runs
+> [!TIP]
+> **Optional but recommended:** Install [**Ollama**](https://ollama.com/download) for real local AI model inference, and [**Docker Desktop**](https://www.docker.com/products/docker-desktop/) for sandboxed code execution. ORBIT AI works perfectly without them in **Demo Mode**.
 
-### Step 1: Clone Repository
+<br>
+
+### Step 1 — Clone the Repository
+
+Open **PowerShell** or **Terminal** and run:
+
 ```powershell
 git clone https://github.com/omkhade75/prototype.git
 cd prototype
 ```
 
-### Step 2: One-Click Launch (Recommended)
-Launch all 3 services (Python AI service, Express backend, and Vite frontend) with port conflict detection and live health monitoring:
-```powershell
-.\launch-orbit.ps1
-```
-> The script automatically verifies Python/Node runtimes, checks Ollama and Docker status, verifies ports 8000, 5000, and 3000, launches services in titled PowerShell windows, verifies health endpoints, and opens **[http://localhost:3000](http://localhost:3000)** in your default browser!
+<br>
 
-### Step 3: Clean Shutdown
-To stop all ORBIT AI services cleanly without leaving orphan processes:
+### Step 2 — Install Dependencies
+
+Run these three commands (one time only):
+
 ```powershell
-.\stop-orbit.ps1
+# Install Python AI service dependencies
+cd ai-service
+pip install -r requirements.txt
+cd ..
+
+# Install Node.js backend dependencies
+cd backend
+npm install
+cd ..
+
+# Install React frontend dependencies
+cd frontend
+npm install
+cd ..
 ```
 
 <details>
-<summary><strong>Manual 3-Terminal Startup Option</strong></summary>
-
-If you prefer launching each component manually:
-
-<table>
-<tr>
-<th>Terminal 1: Python AI Service (:8000)</th>
-<th>Terminal 2: Express Backend (:5000)</th>
-<th>Terminal 3: Vite Frontend (:3000)</th>
-</tr>
-<tr>
-<td>
+<summary><strong>💡 Shortcut — copy-paste all at once</strong></summary>
 
 ```powershell
-.\start-ai-service.ps1
+cd ai-service; pip install -r requirements.txt; cd ..; cd backend; npm install; cd ..; cd frontend; npm install; cd ..
 ```
 
-</td>
-<td>
+</details>
+
+<br>
+
+### Step 3 — Launch ORBIT AI 🚀
 
 ```powershell
-.\start-backend.ps1
+powershell -ExecutionPolicy Bypass -File .\launch-orbit.ps1
 ```
 
-</td>
-<td>
+**That's it!** The launcher will:
+
+1. ✅ Detect your Python and Node.js installations
+2. ✅ Check if Ollama and Docker are running (optional)
+3. ✅ Verify ports 3000, 5000, and 8000 are free
+4. ✅ Start all three services automatically
+5. ✅ Wait for health checks to pass
+6. ✅ **Open your browser** to the app
+
+<br>
+
+### 🌐 Your Local URLs
+
+Once launched, access ORBIT AI at:
+
+| Service | URL | What It Does |
+| :--- | :--- | :--- |
+| 🖥️ **Frontend App** | **[http://localhost:3000](http://localhost:3000)** | The main ORBIT AI interface |
+| ⚙️ **Backend API** | [http://localhost:5000/api/health](http://localhost:5000/api/health) | Express REST API & health status |
+| 🤖 **AI Service Docs** | [http://localhost:8000/docs](http://localhost:8000/docs) | FastAPI interactive API docs |
+
+<br>
+
+### Step 4 — Stop ORBIT AI
+
+When you're done, cleanly shut down all services:
 
 ```powershell
-.\start-frontend.ps1
+powershell -ExecutionPolicy Bypass -File .\stop-orbit.ps1
 ```
 
-</td>
-</tr>
-</table>
+<br>
+
+<details>
+<summary><strong>🔧 Alternative: Manual 3-Terminal Startup</strong></summary>
+
+If you prefer launching each service in its own terminal window:
+
+| Terminal | Command | Port |
+| :--- | :--- | :--- |
+| **Terminal 1** — AI Service | `powershell -ExecutionPolicy Bypass -File .\start-ai-service.ps1` | `:8000` |
+| **Terminal 2** — Backend | `powershell -ExecutionPolicy Bypass -File .\start-backend.ps1` | `:5000` |
+| **Terminal 3** — Frontend | `powershell -ExecutionPolicy Bypass -File .\start-frontend.ps1` | `:3000` |
+
+</details>
+
+<br>
+
+<details>
+<summary><strong>🐧 Running on macOS / Linux?</strong></summary>
+
+The launcher scripts are written for PowerShell on Windows. On macOS or Linux, start each service manually:
+
+```bash
+# Terminal 1 — Python AI Service
+cd ai-service && python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
+
+# Terminal 2 — Node.js Backend
+cd backend && npm start
+
+# Terminal 3 — React Frontend
+cd frontend && npm run dev
+```
+
+Then open [http://localhost:3000](http://localhost:3000) in your browser.
+
 </details>
 
 ---
 
-## 🧩 Core Modules
+<br>
 
-<details open>
-<summary><h3>1. Knowledge Hub (Document RAG)</h3></summary>
+## ✨ What Can ORBIT AI Do?
 
-- **Ingestion**: Upload `.pdf`, `.txt`, and `.md` files up to 10MB.
-- **Authentic Page Preservation**: Preserves true page numbers from PDFs without fabrication.
-- **Chunking**: Overlapping sliding-window chunker (500-char window, 100-char overlap).
-- **Retrieval**: Pure Python TF-IDF with inverted term index and cosine similarity vector matching.
-- **Grounded Q&A**: Answers are strictly grounded in retrieved passages with verifiable citations (Document ID, Page Number, Chunk ID, TF-IDF Score).
+ORBIT AI is built around **11 integrated modules**. Here's what each one does:
 
-```
-Query: "What is WAL mode in SQLite?"
- ├── TF-IDF Vectorization & Inverted Index Matching
- ├── Matched Chunk #2 (Page 1) — Score: 0.4422 [Matched: "sqlite", "wal", "mode"]
- └── Grounded Answer + Source Passage Badges
-```
-</details>
+<br>
 
-<details open>
-<summary><h3>2. Agent Playground (Bounded Tool Calling)</h3></summary>
+### 🏠 Home — System Dashboard
 
-Interact with an autonomous agent with complete visibility into its step-by-step reasoning trace:
+The landing page shows a **live readiness checklist** that pings all three microservices and reports real-time status for:
+- ✅ Express backend API
+- ✅ SQLite database engine
+- ✅ Python AI microservice
+- ✅ Docker sandbox availability
 
-- **Strict Tool Registry**:
-  - `search_knowledge_base`: Queries uploaded document corpus using TF-IDF.
-  - `summarize_document`: Produces an extractive summary of specified document IDs.
-  - `generate_quiz`: Generates multi-choice quizzes based on retrieved topics.
-  - `structured_result`: Formats structured JSON analysis with key takeaways.
-- **Guardrails**: Hard limit of 5 steps per run; validated argument schemas; no arbitrary shell/code execution.
-- **Observability**: Inspect timing, raw model inputs, tool parameters, observations, and citations.
+Quick-launch cards guide you to any module.
 
-</details>
+<br>
 
-<details open>
-<summary><h3>3. Visual Workflow Studio (React Flow)</h3></summary>
+### 📖 Start Here — User Guide
 
-Build and execute node-based DAG pipelines:
+An interactive onboarding guide that explains:
+- What ORBIT AI does and who it's for
+- How each module works
+- How to set up Ollama for local AI
+- Troubleshooting common issues
 
-| Node Type | Function |
+> [!NOTE]
+> **First time?** Start here. It walks you through everything step by step.
+
+<br>
+
+### 📚 Knowledge Hub — Document RAG
+
+Upload PDFs, text files, or markdown and ask questions grounded in your documents.
+
+| Feature | How It Works |
 | :--- | :--- |
-| **Input** | Accepts user text or structured parameters |
-| **Knowledge Search** | Queries the knowledge base and fetches top-K passages |
-| **AI Task** | Executes `summarize`, `extract`, or `transform` |
-| **Condition** | Evaluates comparisons (`equals`, `contains`, `is_not_empty`) |
-| **Human Approval** | **Pauses execution** with status `waiting_for_approval` until explicit sign-off |
-| **Output** | Stores and displays the final executed pipeline payload |
+| **Ingestion** | Upload `.pdf`, `.txt`, `.md` files (up to 10 MB) |
+| **Chunking** | Sliding-window chunker (500 chars, 100-char overlap) |
+| **Retrieval** | Pure-Python **TF-IDF + Cosine Similarity** — no cloud embeddings |
+| **Answers** | Grounded in retrieved passages with citations (Document, Page, Chunk ID, Score) |
 
-> 💡 **Includes DAG Cycle Detection** using Kahn's topological sort algorithm and persistent SQLite state.
+<br>
 
-</details>
+### 🤖 Agent Playground — AI Tool Calling
 
-<details open>
-<summary><h3>4. Coding Playground & DSA Tutor (C++ & Python)</h3></summary>
+Talk to a bounded AI agent that can use registered tools:
+- `search_knowledge_base` — queries your uploaded documents
+- `summarize_document` — generates extractive summaries
+- `generate_quiz` — creates multiple-choice quizzes from content
+- `structured_result` — outputs formatted JSON analysis
 
-An IDE-style programming and algorithmic learning environment:
+Full step-by-step **execution trace** with timing, inputs, and tool outputs visible in the UI.
 
-- **Bilingual Support**: Toggle between **C++17** and **Python 3.11** with preloaded idiomatic templates.
-- **4 Tutor Pedagogical Modes**:
-  1. **Learn**: Deep concept exploration, memory layout diagrams, edge cases, and visual mental models.
-  2. **Build With Me**: Interactive scaffolded problem solving with hints and approach selection.
-  3. **Debug**: Automated diagnostic analysis identifying syntax bugs, off-by-one errors, and segmentation faults.
-  4. **Practice**: Real LeetCode problem prompts with verified official links, constraints, and test cases.
-- **Structured Explanations**:
-  - Problem Understanding & Invariants
-  - Approach Comparison (Brute Force vs. Optimal)
-  - Pseudocode
-  - Formatted Solution Code
-  - Line-by-Line Code Walkthrough
-  - Step-by-Step Dry Run Table
-  - Time & Space Complexity ($O(N)$, $O(1)$)
-- **DSA Topic Browser**: Arrays, Strings, Hashing, Linked Lists, Stacks, Queues, Binary Search, Trees, Graphs, and Dynamic Programming.
+<br>
 
-</details>
+### 💻 Coding Playground & DSA Tutor
 
-<details open>
-<summary><h3>5. PDF-Based DSA Tutor & Personalized Learning Dashboard</h3></summary>
+An interactive programming environment for learning Data Structures & Algorithms:
 
-Learn Data Structures and Algorithms directly from your uploaded university textbooks or PDFs:
+- **Languages:** C++ 17 and Python 3.11 with idiomatic templates
+- **4 Modes:**
+  - **Learn** — Deep concept explanations with memory layouts and edge cases
+  - **Build With Me** — Scaffolded problem solving with progressive hints
+  - **Debug** — Automated diagnosis of syntax errors, off-by-one bugs, segfaults
+  - **Practice** — Real LeetCode problems with constraints and test cases
+- **10 DSA Topics:** Arrays, Strings, Hashing, Linked Lists, Stacks, Queues, Binary Search, Trees, Graphs, Dynamic Programming
+- **Structured Output:** Problem analysis → approach comparison → pseudocode → solution → line-by-line walkthrough → dry-run trace → complexity analysis
 
-- **Document Grounding**: Select any uploaded textbook (e.g. *CLRS*, *Grokking Algorithms*, lecture notes) to index chapters and topics.
-- **Personalized Mastery Dashboard**:
-  - Live mastery percentage calculation based on independent problem solves.
-  - Active topic tracker with difficulty readiness metrics.
-  - Socratic hint counter and quiz performance history.
-  - Targeted revision alerts triggered when diagnostic quiz scores fall below threshold.
+<br>
 
-</details>
+### 🔨 Software Engineer Agent
 
-<details open>
-<summary><h3>6. ORBIT AI Software Engineer Agent</h3></summary>
+An **autonomous AI development agent** that turns a natural-language prompt into a real, runnable full-stack project:
 
-An autonomous local development agent that creates real, runnable full-stack web applications:
+```
+"Build a restaurant management system with menu items, orders, and daily revenue tracking"
+```
+
+↓ ORBIT AI will:
+
+1. **Plan** the architecture (database schema, API routes, frontend pages)
+2. **Generate** real files — HTML, CSS, JavaScript, Express routes, SQLite schema
+3. **Create** a genuine binary SQLite database (`.db` file with real tables)
+4. **Run** automated tests in a sandboxed environment
+5. **Start** a live development preview on a local port
+6. **Screen** for secrets before any Git commit
+
+> [!IMPORTANT]
+> This is a real code generator, not a chatbot that returns snippets. It creates actual project directories with working databases, routes, and test suites.
 
 ```mermaid
 flowchart LR
-    A[Natural Language Prompt] --> B[Architecture Plan]
-    B --> C[Scaffold Full-Stack Files]
-    C --> D[Universal SQLite Database Engine]
-    D --> E[Sandboxed Automated Tests]
-    E -->|Pass| F[Live Development Preview]
-    E -->|Fail| G[AI-Assisted Diagnostic Repair]
+    A["💬 Natural Language Prompt"] --> B["📋 Architecture Plan"]
+    B --> C["📁 Generate Full-Stack Files"]
+    C --> D["🗄️ SQLite Database"]
+    D --> E["🧪 Run Tests"]
+    E -->|Pass| F["🖥️ Live Preview"]
+    E -->|Fail| G["🔧 AI Repair"]
     G --> E
-    F --> H[Git Secret Screening & Commit Gate]
+    F --> H["🔒 Git Commit Gate"]
 ```
 
-- **Authentic Dual-Engine Planning**:
-  - **Ollama Mode**: Local model inference generates custom architectures, database schemas, and REST endpoints for arbitrary domains.
-  - **Demo Mode**: Dynamic NLP entity extraction parses arbitrary prompts into database tables and Express routes.
-  - **Clarification Gate**: Halts and prompts the user if the initial specification is ambiguous or underspecified.
-- **Real SQLite Database Persistence**:
-  - Generates actual binary `.db` files on disk (`SQLite format 3\0`) using Node 22+ native `node:sqlite` or `better-sqlite3`.
-  - Implements real SQL DDL (`CREATE TABLE`), foreign keys, and parameterized queries (`SELECT`, `INSERT`, `DELETE`).
-- **Container Isolation & Sandboxed Command Runner**:
-  - Enforces Docker container isolation (`node:20-alpine`, `-m 512m`, `--cpus 1.0`, `--pids-limit 64`, `--cap-drop=ALL`, `--network=none`).
-  - Refuses untrusted host execution if Docker is offline, unless explicit development host override is authorized with visible audit warnings.
-- **Live Preview Management**: Starts and monitors child development servers on dynamic ports with real-time streaming logs.
-- **Safe Git Operations**:
-  - Pre-commit secret screening scans for API keys, private keys, `.env` files, and database binaries.
-  - Requires explicit human approval for commits and remote pushes.
-  - Confined strictly to `workspaces/<project_id>/`—never touches ORBIT AI's root repository.
+<br>
+
+### 🧠 AI Model Library
+
+Discover, test, and compare local AI models:
+
+- **Hardware Profiles** — Pre-configured for laptops like HP Victus (RTX 3050, 6 GB VRAM)
+- **Curated Catalog** — 10 open-weight models: `llama3.2`, `mistral`, `qwen2.5-coder`, `deepseek-coder`, `phi3`, and more
+- **Live Testing** — Send test prompts and rate responses on Correctness, Code Quality, Speed
+- **Side-by-Side Comparison** — Compare two models with execution times and rubric scores
+- **Global Model Selector** — Changing the active model updates it across all modules
+
+<br>
+
+### 📓 Course-to-Code Lab
+
+Turn university course materials into interactive coding exercises:
+
+- **Upload** course PDFs, slides, code files, or `.ipynb` notebooks
+- **Learn** concepts with source-cited explanations
+- **Explain Code** with line-by-line walkthroughs and dry-run traces
+- **Debug** with root-cause analysis and minimal fixes
+- **Practice** with generated exercises and progressive hints
+- **Generate Jupyter Notebooks** (`.ipynb` v4) with `ast.parse` validation and Google Colab compatibility
+
+<br>
+
+### 🔀 Workflow Studio
+
+Build visual DAG pipelines with drag-and-drop nodes:
+
+| Node Type | Purpose |
+| :--- | :--- |
+| **Input** | Accept user text or parameters |
+| **Knowledge Search** | Query the knowledge base |
+| **AI Task** | Summarize, extract, or transform |
+| **Condition** | Evaluate comparisons |
+| **Human Approval** | Pause for explicit sign-off |
+| **Output** | Display final results |
+
+Uses **Kahn's topological sort** for cycle detection and execution ordering.
+
+<br>
+
+### 📊 Runs & Evaluations
+
+- View execution traces with timing, status, and step-by-step I/O
+- Run deterministic evaluation benchmarks (grounding, rejection, schema validation, approval transitions)
+- Historical run comparison
+
+<br>
+
+### ⚙️ Settings & Health
+
+- Real-time health monitoring for all three services
+- Ollama daemon status and available models
+- Docker connectivity check
+- Active model configuration
+
+---
+
+<br>
+
+## 🏗️ Architecture
+
+ORBIT AI is a **three-service architecture** — all running locally on your machine:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    YOUR LAPTOP / DESKTOP                         │
+│                                                                 │
+│  ┌──────────────────┐  ┌──────────────────┐  ┌───────────────┐ │
+│  │   React + Vite   │  │  Express + SQLite │  │ FastAPI + AI  │ │
+│  │   Frontend UI    │──│  Backend API      │──│ Python Service│ │
+│  │   Port 3000      │  │  Port 5000        │  │ Port 8000     │ │
+│  └──────────────────┘  └──────────────────┘  └───────────────┘ │
+│                              │                       │          │
+│                         ┌────┴────┐            ┌─────┴──────┐  │
+│                         │ SQLite  │            │  Ollama    │  │
+│                         │  .db    │            │ (optional) │  │
+│                         └─────────┘            └────────────┘  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+```mermaid
+graph TD
+    subgraph Frontend["🖥️ React Frontend — Port 3000"]
+        UI["11 Module Pages (JSX + CSS)"]
+    end
+
+    subgraph Backend["⚙️ Express Backend — Port 5000"]
+        API["REST Controllers & Routes"]
+        DB[("SQLite 3 — WAL Mode")]
+        WF["Workflow DAG Engine"]
+        ENG["Engineer Service"]
+        MOD["Model Service"]
+        CRS["Course Lab Service"]
+    end
+
+    subgraph AI["🤖 Python AI Service — Port 8000"]
+        RAG["TF-IDF RAG Retriever"]
+        AGT["Bounded Agent Loop"]
+        DSA["DSA Tutor Engine"]
+        SWE["Software Engineer Orchestrator"]
+        NB["Notebook Builder & AST Validator"]
+        PROV["Ollama / Demo Provider"]
+    end
+
+    UI --> API
+    API --> DB
+    API --> WF
+    API --> ENG
+    API --> MOD
+    API --> CRS
+    API --> RAG
+    API --> AGT
+    API --> DSA
+    API --> SWE
+    API --> NB
+    AGT --> PROV
+```
+
+<br>
+
+### Tech Stack
+
+| Layer | Technology | Why |
+| :--- | :--- | :--- |
+| **Frontend** | React 18 + Vite + JavaScript JSX | Fast dev server, no TypeScript complexity |
+| **Backend** | Node.js + Express (ES Modules) | Lightweight API gateway with SQLite |
+| **Database** | SQLite 3 (WAL mode, `better-sqlite3`) | Zero-config, single-file, offline-ready |
+| **AI Service** | Python 3.11 + FastAPI + Uvicorn | Document processing, RAG, agent loops |
+| **Local AI** | Ollama (optional) | Run `llama3`, `mistral`, `qwen2.5` locally |
+| **Sandbox** | Docker (optional) | Isolated code execution with resource limits |
+
+---
+
+<br>
+
+## 🧪 Test Results
+
+ORBIT AI has **154 automated tests** across the full stack:
+
+```powershell
+# Run all tests with one command:
+powershell -ExecutionPolicy Bypass -File .\run-tests.ps1
+```
+
+| Suite | Tests | Status |
+| :--- | :---: | :---: |
+| 🐍 **Python AI Service** (pytest) | 97 | ✅ All Passing |
+| 🟢 **Node.js Backend** (node --test) | 57 | ✅ All Passing |
+| ⚡ **Frontend Build** (Vite) | 1768 modules | ✅ 0 Errors |
+
+<details>
+<summary><strong>📋 Detailed Test Breakdown</strong></summary>
+
+**Python AI Service — 97 Tests:**
+- RAG extraction, chunking, and TF-IDF retrieval (11)
+- Agent tool registry and bounded step enforcement (6)
+- C++ and Python code runner sandbox (15)
+- DSA tutor pedagogy and PDF topic identification (17)
+- Ollama native function calling and offline refusal (8)
+- Software Engineer path security and secret screening (13)
+- AI Model Library catalog and comparison rubrics (10)
+- Course-to-Code Lab extraction and notebook synthesis (10)
+- Health endpoints and CORS configuration (7)
+
+**Node.js Backend — 57 Tests:**
+- SQLite WAL schema and seeding (3)
+- Workflow DAG validation and cycle detection (3)
+- Evaluation runner and approval transitions (1)
+- Coding service proxying (4)
+- Learning progress tracking (6)
+- Software Engineer workspace lifecycle and security (12)
+- AI Model Library persistence and ratings (5)
+- Course-to-Code Lab CRUD and notebooks (6)
+- Agent service runs and step recording (1)
+- Home and User Guide verification (5)
+- Plus additional integration tests
 
 </details>
 
-<details open>
-<summary><h3>7. AI Model Library & Learning Center</h3></summary>
+---
 
-An integrated workstation to discover, evaluate, and manage local AI models without leaving ORBIT:
+<br>
 
-- **Hardware Profile Matching**: Pre-configured profiles for developer machines, including the user's **HP Victus** laptop (RTX 3050 6GB VRAM, 16GB RAM), indicating VRAM head-room, quantization fit (Q4 vs Q8), and tokens-per-second expectations.
-- **Curated Offline Catalog**: 10 open-weights models categorized by domain: Coding Specialists (`qwen2.5-coder:7b`, `codellama:7b`, `deepseek-coder:6.7b`), General Reasoning (`llama3.2:3b`, `mistral:7b`), and Compact/Fast (`phi3:mini`).
-- **Local Ollama Daemon Inspection**: Real-time status reporting against `http://localhost:11434`, distinguishing downloaded weights from unpulled catalog entries.
-- **Live Interactive Model Testing**: Test prompts against active models across Coding, Reasoning, and Extraction tasks with rubric ratings (Correctness, Code Quality, Speed) persisted to SQLite.
-- **Side-by-Side Model Comparison**: Compare responses, execution times, and rubric scores between two models.
-- **Shared Active Model Propagation**: Changing the active model in the Model Library automatically updates the default model across the Agent Playground, DSA Tutor, Software Engineer, and Course-to-Code Lab.
+## 💡 Demo Mode vs Ollama Mode
 
-</details>
+ORBIT AI works **out of the box** without any AI model installed:
 
-<details open>
-<summary><h3>8. Course-to-Code Lab (Jupyter & Colab)</h3></summary>
+| | Demo Mode *(default)* | Ollama Mode |
+| :--- | :--- | :--- |
+| **Setup** | Nothing — works immediately | Install [Ollama](https://ollama.com/) + pull a model |
+| **Hardware** | Any laptop, no GPU needed | GPU recommended (runs on CPU too) |
+| **How It Works** | Deterministic extractive engine | Real local LLM inference |
+| **Cost** | **\$0** | **\$0** |
+| **Offline** | ✅ Always works offline | ✅ Works offline after model download |
 
-Bridge academic study and practical programming:
+**To enable Ollama Mode:**
 
-- **Multi-Format Course Ingestion**: Supports `.pdf`, `.txt`, `.md`, `.py`, `.cpp`, `.js`, and `.ipynb` files with automatic code snippet harvesting.
-- **Honest Scanned Page Detection**: Detects scanned or image-only PDF pages without text, flagging them honestly with actionable guidance instead of simulating extracted text.
-- **Knowledge Hub Bridge**: Re-use documents already indexed in the Knowledge Hub without redundant file storage.
-- **4 Pedagogical Learning Modes**:
-  - **Learn**: Plain-English concept explanations with verifiable source citations (`[Source: filename, Page X]`).
-  - **Explain Code**: Line-by-line walk-throughs, input/output contracts, algorithmic dry-run trace tables, and time/space complexity analysis.
-  - **Debug**: Error diagnosis, root-cause identification, and smallest minimal fix with clear distinction between static linting and containerized execution.
-  - **Practise**: Dynamic exercise generator with 3 progressive hints, reference solution, and tracking of independent solves.
-- **Jupyter Notebook Generator**: Assembles snippets into compliant Jupyter Notebook v4 (`.ipynb`) files with deduplicated import cells, markdown explanations, and assertion verification cells.
-- **AST Correctness & Dependency Checking**: Validates Python syntax using `ast.parse`, flags out-of-order cell execution, and screens for hardcoded credentials.
-- **Google Colab Workflow**: Generates notebooks with official `Open in Colab` badges and secure `google.colab.userdata` credential handling.
+```powershell
+# 1. Install Ollama from https://ollama.com/download
+# 2. Pull a model:
+ollama pull llama3.2
+
+# 3. Ollama runs automatically — ORBIT AI detects it on port 11434
+# 4. Switch to "Ollama Mode" in the Agent Playground or Model Library
+```
+
+<br>
+
+### Recommended Models for Laptops
+
+| Model | VRAM Needed | Speed | Best For |
+| :--- | :--- | :--- | :--- |
+| `llama3.2:3b` | ~2 GB | ⚡ Very Fast | General explanations, agent tool calling |
+| `qwen2.5-coder:7b` | ~4.7 GB | 🔥 Fast | Code generation, debugging |
+| `mistral:7b` | ~4.1 GB | 🔥 Fast | Reasoning, tutorials |
+| `deepseek-r1:8b` | ~4.9 GB | 🔥 Fast | Math, algorithmic problem solving |
+| `phi3:mini` | ~2.3 GB | ⚡ Very Fast | Quick summaries, lightweight tasks |
+
+---
+
+<br>
+
+## 🛡️ Security & Sandboxing
+
+ORBIT AI takes security seriously:
+
+- **Docker Container Isolation** — User code runs in locked-down containers:
+  - `--network=none` (no internet access)
+  - `-m 512m` (512 MB RAM cap)
+  - `--cpus 1.0` (single CPU core)
+  - `--pids-limit 64` (process limit)
+  - `--cap-drop=ALL` (zero Linux capabilities)
+- **Path Traversal Protection** — All file operations are strictly confined to `workspaces/<project-id>/`
+- **Git Secret Screening** — Pre-commit scans catch API keys, `.env` files, private keys, and database binaries
+- **No Docker? No problem** — Without Docker, untrusted execution is refused (with clear instructions). An explicit developer override is available with visible security warnings.
+
+---
+
+<br>
+
+## 📶 Offline Capabilities
+
+| Feature | Offline? | Notes |
+| :--- | :---: | :--- |
+| Demo Mode (all modules) | ✅ 100% | No GPU, no models, no internet |
+| Knowledge Hub RAG | ✅ 100% | Pure Python TF-IDF |
+| SQLite Database | ✅ 100% | Local file-based storage |
+| Notebook Generation | ✅ 100% | Local `.ipynb` creation + AST validation |
+| Model Catalog | ✅ 100% | Built-in offline catalog |
+| Ollama Inference | ✅ After first pull | Model weights stored locally |
+| Docker Sandbox | ✅ After first pull | Container images cached locally |
+| Model Downloads | ❌ Online only | Internet needed to pull model weights |
+| GitHub Push | ❌ Online only | Internet needed for remote Git |
+
+---
+
+<br>
+
+## 📂 Project Structure
+
+```
+orbit-ai/
+├── 🖥️ frontend/               React + Vite application
+│   ├── src/pages/             11 module pages (Home, UserGuide, KnowledgeHub,
+│   │                          AgentPlayground, CodingPlayground, SoftwareEngineer,
+│   │                          ModelLibrary, CourseLab, WorkflowStudio,
+│   │                          RunsEvaluations, SettingsHealth)
+│   ├── src/components/        Sidebar, shared UI components
+│   └── src/styles/            Global CSS design system
+│
+├── ⚙️ backend/                 Node.js Express API
+│   ├── src/database/          SQLite schema (WAL mode) + seed data
+│   ├── src/services/          Business logic (engineer, model, courseLab, etc.)
+│   ├── src/controllers/       REST API controllers
+│   ├── src/routes/            Express route definitions
+│   └── tests/                 57 automated tests
+│
+├── 🤖 ai-service/             Python FastAPI microservice
+│   ├── app/rag/               PDF extractor, chunker, TF-IDF retriever
+│   ├── app/agents/            Bounded agent loop with trace logging
+│   ├── app/coding/            DSA tutor, code runner, topic catalog
+│   ├── app/engineer/          Software engineer planner & scaffolder
+│   ├── app/models/            Ollama/Demo providers, model catalog
+│   ├── app/course/            Course extractor, notebook builder
+│   └── tests/                 97 automated tests
+│
+├── 📁 workspaces/              Generated project directories
+├── 📄 docs/                    Architecture docs, Docker setup guide
+│
+├── 🚀 launch-orbit.ps1        One-click launcher (starts all 3 services)
+├── 🛑 stop-orbit.ps1          Clean shutdown script
+├── 🧪 run-tests.ps1           Full test suite runner
+├── .env.example               Environment variable template
+└── .gitignore                  Excludes node_modules, *.db, .venv, dist
+```
+
+---
+
+<br>
+
+## ❓ Frequently Asked Questions
+
+<details>
+<summary><strong>🔴 "Port 3000/5000/8000 is already in use"</strong></summary>
+
+Run the shutdown script to free the ports:
+```powershell
+powershell -ExecutionPolicy Bypass -File .\stop-orbit.ps1
+```
+Then relaunch with `.\launch-orbit.ps1`.
 
 </details>
 
 <details>
-<summary><h3>9. Runs, Evaluations & System Health</h3></summary>
+<summary><strong>🔴 "Running scripts is disabled on this system"</strong></summary>
 
-- **Execution Trace Viewer**: Inspect run latency, timestamps, status (`running`, `successful`, `failed`, `waiting_for_approval`), and step-by-step inputs/outputs.
-- **Deterministic Evaluation Suite**: Measures real performance against automated benchmarks:
-  1. *Knowledge Retrieval Grounding*
-  2. *Missing Information Rejection (Zero-Match Fallback)*
-  3. *Tool Argument Schema Validation*
-  4. *Human Approval State Transition & Idempotency*
-- **Real-Time Health Monitor**: Live connectivity status for the Express API gateway, SQLite database, Python AI microservice, and local Ollama daemon.
+Windows may block PowerShell scripts. Use this prefix:
+```powershell
+powershell -ExecutionPolicy Bypass -File .\launch-orbit.ps1
+```
+
+</details>
+
+<details>
+<summary><strong>🔴 "Python/Node.js not found"</strong></summary>
+
+Make sure Python 3.11+ and Node.js 18+ are installed and added to your system PATH. Verify with:
+```powershell
+python --version
+node --version
+```
+
+</details>
+
+<details>
+<summary><strong>🟡 "Ollama daemon not running — Demo mode will be used"</strong></summary>
+
+This is normal! ORBIT AI works perfectly in Demo Mode. If you want real AI inference:
+1. Install Ollama from [ollama.com](https://ollama.com/download)
+2. Run `ollama pull llama3.2` to download a model
+3. Ollama starts automatically — ORBIT AI will detect it
+
+</details>
+
+<details>
+<summary><strong>🟡 "Docker not installed"</strong></summary>
+
+Docker is optional. Without it, the Software Engineer agent uses safe host-mode execution with visible security warnings. For full sandboxing, install [Docker Desktop](https://www.docker.com/products/docker-desktop/).
+
+</details>
+
+<details>
+<summary><strong>🟢 Can I use ORBIT AI without a GPU?</strong></summary>
+
+**Yes!** Demo Mode requires zero GPU. Even Ollama can run on CPU-only machines (just slower). Models like `llama3.2:3b` run well on modern CPUs.
+
+</details>
+
+<details>
+<summary><strong>🟢 Does ORBIT AI send my data to the cloud?</strong></summary>
+
+**No.** Everything runs locally on your machine. No telemetry, no cloud APIs, no data leaves your laptop.
 
 </details>
 
 ---
 
-## 🏗️ System Architecture
+<br>
 
-```mermaid
-graph TD
-    subgraph Frontend["React Frontend (Vite :3000)"]
-        UI["Glassy Dark Design System (Pure JavaScript JSX)"]
-        KH["Knowledge Hub (RAG)"]
-        AP["Agent Playground"]
-        WS["Workflow Studio (React Flow)"]
-        CP["Coding Playground & Tutor"]
-        SWE["Software Engineer Workspace"]
-        ML["AI Model Library & Testing"]
-        CC["Course-to-Code Lab"]
-        RE["Runs & Evaluations"]
-        SH["Settings & Health"]
-    end
+## 🤝 Built By
 
-    subgraph Backend["Express.js API Gateway (:5000)"]
-        Router["Express Controllers & Routes"]
-        WFE["Workflow DAG Engine (Kahn's Sort)"]
-        EVAL["Evaluation Runner"]
-        SE_SVC["Engineer Service (Workspaces, Previews, Git)"]
-        MOD_SVC["Model Service (Catalog, Ratings, Settings)"]
-        CRS_SVC["Course Lab Service (Notebooks, Snippets)"]
-        DB[(SQLite 3 WAL Mode)]
-    end
+**Om Khade** — Computer Science Student
 
-    subgraph AIService["Python FastAPI Microservice (:8000)"]
-        Ext["Document Extractor (PDF/TXT/MD/Code)"]
-        TFIDF["TF-IDF Keyword Retriever"]
-        Agent["Bounded Agent Loop"]
-        CodingTutor["DSA Tutor Engine (C++ / Python)"]
-        CodeRunner["Sandboxed Code Execution Engine"]
-        SweAgent["Software Engineer Orchestrator"]
-        NbBuilder["Jupyter Notebook Builder & AST Validator"]
-        OllamaMgr["Ollama Daemon Manager & Catalog"]
-        DemoProv["Demo Provider (Extractive / Deterministic)"]
-        OllamaProv["Ollama Provider (Local LLM Native API)"]
-    end
-
-    subgraph Sandbox["Execution Boundary"]
-        DockerBox["Docker Container Isolation (--network=none, 512MB RAM, 1 CPU)"]
-        Workspaces["Sandboxed Workspaces (workspaces/<project-id>)"]
-    end
-
-    UI --> Router
-    Router --> WFE
-    Router --> EVAL
-    Router --> SE_SVC
-    Router --> MOD_SVC
-    Router --> CRS_SVC
-    Router --> DB
-    SE_SVC --> Workspaces
-    Router --> Ext
-    Router --> TFIDF
-    Router --> Agent
-    Router --> CodingTutor
-    Router --> CodeRunner
-    Router --> SweAgent
-    Router --> NbBuilder
-    Router --> OllamaMgr
-    CodeRunner --> DockerBox
-    SweAgent --> DockerBox
-    Agent --> DemoProv
-    Agent --> OllamaProv
-    OllamaMgr --> OllamaProv
-```
+[![GitHub](https://img.shields.io/badge/GitHub-omkhade75-181717?style=flat-square&logo=github)](https://github.com/omkhade75)
 
 ---
 
-## 💻 HP Victus Laptop Setup & Hardware Profile
-
-ORBIT AI includes a dedicated hardware profile calibrated for the **HP Victus Laptop**:
-
-| Specification | Hardware Detail | ORBIT AI Capability Profile |
-| :--- | :--- | :--- |
-| **Processor** | Intel Core i7 (12th/13th Gen, 14 Cores / 20 Threads) | High-speed multi-threaded TF-IDF indexing & AST parsing |
-| **Graphics** | NVIDIA GeForce RTX 3050 Laptop GPU (**6 GB GDDR6 VRAM**) | GPU acceleration for models up to **7B/8B parameters (Q4)** |
-| **System RAM** | **16 GB DDR4/DDR5** | Smooth multitasking across Frontend + Backend + AI Service + Ollama |
-| **Storage** | NVMe PCIe M.2 SSD | Instant SQLite WAL read/writes and rapid notebook generation |
-
-### Recommended Models for HP Victus (6 GB VRAM)
-To ensure smooth GPU offloading without swapping to system RAM:
-1. **`llama3.2:3b`** (~2.0 GB VRAM) — *Lightning fast (45+ tok/sec), ideal for explanations and agent tool calling.*
-2. **`qwen2.5-coder:7b`** (~4.7 GB VRAM) — *Exceptional coding accuracy, fits within 6 GB VRAM.*
-3. **`mistral:7b-instruct-q4_K_M`** (~4.1 GB VRAM) — *Balanced reasoning and concise tutorial walk-throughs.*
-4. **`deepseek-r1:8b`** (~4.9 GB VRAM) — *Chain-of-thought mathematical and algorithmic problem solving.*
-
----
-
-## 📶 Offline-First Capabilities & Dependency Matrix
-
-ORBIT AI operates primarily offline. The table below details what functions offline versus external dependencies:
-
-| Feature / Workflow | Offline Capability | Requirements |
-| :--- | :--- | :--- |
-| **Demo Mode (All Modules)** | 🟢 **100% Offline** | Zero GPU, zero external models. Pure Python & Node runtime. |
-| **Knowledge Hub (RAG)** | 🟢 **100% Offline** | Pure Python TF-IDF and cosine similarity. No cloud embeddings. |
-| **SQLite Persistence** | 🟢 **100% Offline** | Local SQLite 3 WAL database in `backend/data/orbit_ai.db`. |
-| **Notebook Generation & AST Check** | 🟢 **100% Offline** | Local `.ipynb` v4 synthesis and `ast.parse` syntax validation. |
-| **Model Catalog & Hardware Profiles** | 🟢 **100% Offline** | Curated offline database in `catalog_data.py`. |
-| **Local LLM Inference (Ollama)** | 🟡 **Local Offline** *(Once pulled)* | Requires Ollama running and model pulled (`ollama pull <model>`). |
-| **Docker Isolated Code Runner** | 🟡 **Local Offline** *(Once pulled)* | Requires Docker Desktop running with `node:20-alpine` / `python:3.11`. |
-| **Software Engineer Full-Stack Builds** | 🟡 **Local Offline** *(If cached)* | Full template scaffolding works offline. `npm install` uses local cache if offline. |
-| **Model Weight Downloads** | 🔴 **Online Only** | Requires internet to pull model weights from ollama.com. |
-| **Google Colab Direct Opening** | 🔴 **Online Only** | Requires internet to navigate to Google Colab in browser. |
-| **GitHub Git Push** | 🔴 **Online Only** | Requires internet to push to remote GitHub repository. |
-
----
-
-## 💡 Two-Tier Execution: Demo vs. Ollama
-
-| Feature | Demo Mode (Default) | Ollama Mode (Native Local AI) |
-| :--- | :--- | :--- |
-| **Hardware Required** | Standard laptop / low-spec CPU | GPU or modern CPU for local inference |
-| **Dependencies** | Pure Python 3.11+ | Local Ollama daemon (`ollama serve`) |
-| **Active Model** | Deterministic Grounded Engine | `llama3`, `mistral`, `qwen2.5`, `phi3` |
-| **Cost** | **$0.00 (100% Free)** | **$0.00 (100% Free Local)** |
-| **Offline Handling** | Always available | Clear failure reporting with diagnostics (**No silent fallback**) |
-| **Response Label** | Explicitly tagged `demo` | Tagged with real model name (`llama3`) |
-
----
-
-## 🛡️ Docker Sandboxing & Security
-
-Untrusted user code and generated full-stack applications run with strict isolation:
-
-* **Container Isolation**:
-  ```bash
-  docker run --rm \
-    --network=none \
-    -m 512m \
-    --cpus 1.0 \
-    --pids-limit 64 \
-    --cap-drop=ALL \
-    -v "/path/to/workspace:/workspace:rw" \
-    -w /workspace \
-    node:20-alpine npm test
-  ```
-* **Resource Quotas**: Hard-capped at 512MB RAM, 1.0 CPU core, 64 processes/threads, and 30-second execution timeouts.
-* **Network Isolation**: Complete network disconnection (`--network=none`) prevents data exfiltration.
-* **Volume Isolation**: Only the active project directory is mounted. Host operating system files and Docker sockets are never exposed.
-* **Dockerless Environments**: If Docker is not present, untrusted execution is refused with clear setup instructions. An explicit development override flag (`allow_host_override=true`) is available for local testing, recording visible security warnings.
-
----
-
-## 🧪 Automated Testing
-
-ORBIT AI includes automated test suites across the Python AI service, Node.js backend, and generated workspaces:
-
-```powershell
-.\run-tests.ps1
-```
-
-### Test Suite Metrics
-
-1. **Python FastAPI Service (97 Tests)**:
-   ```powershell
-   python -m pytest ai-service/tests -v
-   ```
-   * RAG extraction, chunking, and TF-IDF mathematical retrieval (11 tests)
-   * Agent tool registry and bounded step enforcement (6 tests)
-   * C++ and Python code runner sandbox and test harness (15 tests)
-   * DSA tutor pedagogy and PDF topic identification (17 tests)
-   * Ollama native function calling and offline refusal (8 tests)
-   * Software Engineer path canonicalization, command allowlisting, and secret screening (13 tests)
-   * AI Model Library catalog, Ollama manager, and comparison rubrics (10 tests)
-   * Course-to-Code Lab extraction, AST syntax validation, and notebook synthesis (10 tests)
-   * **Total: 97 passed, 0 failed (100% pass rate)**
-
-2. **Node.js Express Backend (51 Tests)**:
-   ```powershell
-   node --test backend/tests/*.test.js
-   ```
-   * SQLite WAL database schema and non-destructive seeding (3 tests)
-   * Workflow DAG validation and Kahn's topological cycle detection (3 tests)
-   * Evaluation runner and human-in-the-loop approval transitions (1 test)
-   * Coding service proxying and runner status (4 tests)
-   * Learning progress tracking, hints, and quiz attempts (6 tests)
-   * Software engineer workspace lifecycle, path traversal denial, and git secret screening (12 tests)
-   * AI Model Library persistence, rubric ratings, and comparison sessions (5 tests)
-   * Course-to-Code Lab CRUD, snippets, and notebook persistence (6 tests)
-   * Agent service runs and step recording (1 test)
-   * **Total: 51 passed, 0 failed (100% pass rate)**
-
-3. **Generated Project Integration Test (4 Tests)**:
-   ```powershell
-   cd workspaces/restaurant-management
-   node --test tests/api.test.js
-   ```
-   * Real binary SQLite `.db` file existence (`SQLite format 3\0`)
-   * SQL DDL schema initialization
-   * SQL queries, inserts, deletes, and aggregate functions (`SUM`, `COUNT`)
-   * **Total: 4 passed, 0 failed (100% pass rate)**
-
-4. **Frontend Production Build**:
-   ```powershell
-   cd frontend
-   npm run build
-   ```
-   * Clean production build via Vite: **0 errors, 1.95s build time**.
-
----
-
-## 📂 Project Directory Tree
-
-```
-orbit-ai/
-├── frontend/             # React application (Vite, JavaScript JSX, Glassy CSS)
-│   ├── src/pages/        # KnowledgeHub, AgentPlayground, WorkflowStudio,
-│   │                     # CodingPlayground, SoftwareEngineer, ModelLibrary,
-│   │                     # CourseLab, Evaluations, Settings
-│   └── src/components/   # Navigation Sidebar, Glassy Cards, Test Result Viewers
-├── backend/              # Node.js Express API Gateway (ES Modules)
-│   ├── src/database/     # SQLite schema (WAL mode) and non-destructive seed data
-│   ├── src/services/     # Workflow DAG, engineerService, modelService, courseLabService
-│   ├── src/controllers/  # Express REST API controllers
-│   ├── src/routes/       # Express API routes (/api/*)
-│   └── tests/            # Automated Node.js unit and integration tests (51 tests)
-├── ai-service/           # Python 3.11+ FastAPI microservice
-│   ├── app/rag/          # PDF/TXT extractor, text chunker, TF-IDF retriever
-│   ├── app/tools/        # Bounded tool registry with JSON argument validation
-│   ├── app/agents/       # Bounded agent loop with trace logging
-│   ├── app/coding/       # DSA topic catalog, tutor pedagogy, C++/Python runner
-│   ├── app/engineer/     # Software Engineer agent, planner, scaffolder, command runner
-│   ├── app/models/       # OllamaProvider, DemoProvider, OllamaManager, ModelCatalog
-│   ├── app/course/       # Course extractor, assistant, notebook builder, AST validator
-│   └── tests/            # Automated pytest test suites (97 tests)
-├── workspaces/           # Isolated project workspaces generated by the AI Engineer
-│   └── restaurant-management/ # Reference generated project with real SQLite
-├── docs/                 # Architectural specifications, API guides, Docker setup
-│   └── DOCKER_SANDBOX_SETUP.md
-├── launch-orbit.ps1      # 1-Click launcher with port detection and health verification
-├── stop-orbit.ps1        # 1-Click clean shutdown script
-├── run-tests.ps1         # Comprehensive test suite runner
-├── start-ai-service.ps1  # Launch script for FastAPI microservice (:8000)
-├── start-backend.ps1     # Launch script for Express API gateway (:5000)
-├── start-frontend.ps1    # Launch script for React Vite frontend (:3000)
-├── .env.example          # Environment variables template
-└── .gitignore            # Excludes node_modules, *.db, .venv, dist, caches
-```
-
----
+<br>
 
 ## 📄 License
 
-This project is licensed under the [MIT License](LICENSE). Built for learning, experimentation, and local AI engineering.
+This project is licensed under the **[MIT License](LICENSE)** — free to use, modify, and distribute.
+
+---
+
+<div align="center">
+
+<br>
+
+**⭐ If you find ORBIT AI useful, give it a star on GitHub!**
+
+<br>
+
+*Built with ❤️ for students who want to learn AI engineering hands-on.*
+
+<br>
+
+</div>
