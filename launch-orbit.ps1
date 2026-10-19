@@ -57,11 +57,29 @@ try {
     $modelCount = 0
     if ($ollamaCheck.models) { $modelCount = $ollamaCheck.models.Count }
     Write-Host "[OK] Ollama daemon is running on port 11434 - $modelCount model(s) available." -ForegroundColor Green
-    if ($modelCount -eq 0) {
-        Write-Host '     Tip: Pull a model with: ollama run llama3.2' -ForegroundColor DarkGray
+    if ($modelCount -gt 0) {
+        $firstModel = $ollamaCheck.models[0].name
+        Write-Host "     Active local model: $firstModel" -ForegroundColor Cyan
     }
 } catch {
-    Write-Host '[INFO] Ollama daemon not running. Demo mode will be used for AI features.' -ForegroundColor DarkGray
+    $ollamaExe = Get-Command ollama -ErrorAction SilentlyContinue
+    if ($ollamaExe) {
+        Write-Host '[INFO] Ollama installed but not running. Starting Ollama daemon in background...' -ForegroundColor Cyan
+        Start-Process ollama -ArgumentList 'serve' -WindowStyle Hidden
+        Start-Sleep -Seconds 2
+        try {
+            $ollamaCheck = Invoke-RestMethod -Uri 'http://localhost:11434/api/tags' -Method Get -TimeoutSec 3 -ErrorAction Stop
+            $modelCount = if ($ollamaCheck.models) { $ollamaCheck.models.Count } else { 0 }
+            Write-Host "[OK] Ollama daemon started successfully on port 11434 - $modelCount model(s) available." -ForegroundColor Green
+            if ($modelCount -gt 0) {
+                Write-Host "     Active local model: $($ollamaCheck.models[0].name)" -ForegroundColor Cyan
+            }
+        } catch {
+            Write-Host '[INFO] Ollama is initializing in the background.' -ForegroundColor DarkGray
+        }
+    } else {
+        Write-Host '[INFO] Ollama not installed. Demo mode will be used for AI features.' -ForegroundColor DarkGray
+    }
 }
 
 try {
