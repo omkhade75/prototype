@@ -17,8 +17,8 @@ class OllamaProvider(ModelProvider):
         timeout: Optional[float] = None
     ):
         self.base_url = (base_url or os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")).rstrip("/")
-        self.model = model or os.getenv("OLLAMA_MODEL", "llama3")
-        self.timeout = timeout or float(os.getenv("OLLAMA_TIMEOUT", "30.0"))
+        self.model = model or os.getenv("OLLAMA_MODEL", "qwen3.5:4b")
+        self.timeout = timeout or float(os.getenv("OLLAMA_TIMEOUT", "120.0"))
 
     @property
     def name(self) -> str:
@@ -37,11 +37,16 @@ class OllamaProvider(ModelProvider):
                     raw_models = data.get("models", [])
                     installed_models = [m.get("name") for m in raw_models if m.get("name")]
                     
-                    # Check if configured model or tagged variant (e.g. llama3:latest) exists
+                    # Check if configured model or tagged variant (e.g. qwen3.5:4b) exists
                     model_found = any(
                         m == self.model or m.startswith(f"{self.model}:") or self.model.startswith(f"{m}:")
                         for m in installed_models
                     )
+
+                    # If configured model is not installed but other local models exist, auto-select the first one
+                    if not model_found and installed_models:
+                        self.model = installed_models[0]
+                        model_found = True
                     
                     return {
                         "reachable": True,

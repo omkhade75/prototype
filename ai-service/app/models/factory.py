@@ -13,7 +13,7 @@ def get_provider(provider_name: Optional[str] = None) -> ModelProvider:
     Defaults to 'demo' mode if unspecified.
     """
     global _ollama_provider_instance
-    target = (provider_name or os.getenv("AI_PROVIDER", "demo")).lower().strip()
+    target = (provider_name or os.getenv("AI_PROVIDER", "ollama")).lower().strip()
 
     if target == "ollama":
         if _ollama_provider_instance is None:
@@ -27,17 +27,21 @@ async def get_system_ai_status() -> Dict[str, Any]:
     """
     Returns the current AI provider configuration and connectivity status.
     """
-    configured_provider = os.getenv("AI_PROVIDER", "demo").lower()
+    configured_provider = os.getenv("AI_PROVIDER", "ollama").lower()
     ollama_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
-    ollama_model = os.getenv("OLLAMA_MODEL", "llama3")
+    ollama_model = os.getenv("OLLAMA_MODEL", "qwen3.5:4b")
 
     ollama_prov = OllamaProvider(base_url=ollama_url, model=ollama_model)
     health = await ollama_prov.get_health_status()
 
+    # If Ollama is reachable and model is available, active_provider is ollama
+    is_live_ollama = health.get("reachable", False) and health.get("model_installed", False)
+    actual_provider = "ollama" if is_live_ollama else ("demo" if configured_provider == "demo" else "ollama")
+
     return {
-        "active_provider": configured_provider,
-        "is_demo_mode": configured_provider == "demo",
-        "configured_model": ollama_model,
+        "active_provider": actual_provider,
+        "is_demo_mode": not is_live_ollama and configured_provider != "ollama",
+        "configured_model": ollama_prov.model,
         "ollama_base_url": ollama_url,
         "ollama_reachable": health["reachable"],
         "ollama_installed_models": health["installed_models"],
