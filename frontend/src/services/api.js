@@ -24,8 +24,22 @@ async function request(endpoint, options = {}) {
 }
 
 export const api = {
-  // --- System Health & Status ---
+  // --- System Health & Laptop Copilot ---
   getSystemStatus: () => request('/system/status'),
+  getSystemMetrics: () => request('/system/metrics'),
+  scheduleShutdown: ({ minutes = 5, reason = 'Scheduled by ORBIT AI' } = {}) =>
+    request('/system/power/shutdown', {
+      method: 'POST',
+      body: JSON.stringify({ minutes, reason })
+    }),
+  cancelShutdown: () => request('/system/power/cancel', { method: 'POST' }),
+  optimizePerformance: () => request('/system/optimize/performance', { method: 'POST' }),
+  optimizeNetwork: () => request('/system/optimize/network', { method: 'POST' }),
+  sendSystemPrompt: (prompt) =>
+    request('/system/prompt', {
+      method: 'POST',
+      body: JSON.stringify({ prompt })
+    }),
 
   // --- Documents & Knowledge Hub ---
   getDocuments: () => request('/documents'),

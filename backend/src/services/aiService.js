@@ -135,4 +135,52 @@ export class AIService {
 
     return await res.json();
   }
+
+  static async getSystemStatus() {
+    const res = await fetch(`${AI_SERVICE_URL}/system/status`);
+    if (!res.ok) throw new Error(`System status failed: HTTP ${res.status}`);
+    return await res.json();
+  }
+
+  static async scheduleShutdown(minutes = 5, reason = 'Scheduled by ORBIT AI') {
+    const res = await fetch(`${AI_SERVICE_URL}/system/power/shutdown`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ minutes, reason })
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.detail || 'Failed to schedule shutdown');
+    }
+    return await res.json();
+  }
+
+  static async cancelShutdown() {
+    const res = await fetch(`${AI_SERVICE_URL}/system/power/cancel`, { method: 'POST' });
+    if (!res.ok) throw new Error('Failed to cancel shutdown');
+    return await res.json();
+  }
+
+  static async optimizePerformance() {
+    const res = await fetch(`${AI_SERVICE_URL}/system/optimize/performance`, { method: 'POST' });
+    if (!res.ok) throw new Error('Performance optimization failed');
+    return await res.json();
+  }
+
+  static async optimizeNetwork() {
+    const res = await fetch(`${AI_SERVICE_URL}/system/optimize/network`, { method: 'POST' });
+    if (!res.ok) throw new Error('Network optimization failed');
+    return await res.json();
+  }
+
+  static async handleSystemPrompt(prompt) {
+    const res = await fetch(`${AI_SERVICE_URL}/system/prompt`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt })
+    });
+    if (!res.ok) throw new Error('System prompt processing failed');
+    return await res.json();
+  }
 }
+

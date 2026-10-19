@@ -47,6 +47,19 @@ export function Home({ systemStatus, setCurrentTab }) {
   // Quick Action feature cards data preserved intact
   const featureCards = [
     {
+      id: 'laptop-copilot',
+      title: 'Laptop Copilot & Privacy Shield',
+      badge: 'Zero-Access Shield',
+      badgeColor: 'badge-teal',
+      icon: Laptop,
+      color: 'var(--accent-teal)',
+      glowColor: 'rgba(20, 184, 166, 0.28)',
+      tagline: 'Power, Load Shifting & Internet Accelerator',
+      desc: 'Control laptop power (shutdown in 5 min), shift background loads to free RAM, accelerate WiFi, and enforce zero-access privacy shields.',
+      actionText: 'Open Laptop Copilot',
+      featured: true
+    },
+    {
       id: 'engineer',
       title: 'AI Software Engineer',
       badge: 'Autonomous',
@@ -587,6 +600,71 @@ export function Home({ systemStatus, setCurrentTab }) {
           border-color: var(--border-glass-hover);
           box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.4);
         }
+
+        /* Pure OLED Black Dark Mode Overrides (Zero Blue, 0% Idle Compositing) */
+        [data-theme="dark"] .orbit-glow-orb {
+          display: none !important;
+        }
+
+        [data-theme="dark"] .orbit-hero-panel {
+          background: #000000 !important;
+          border: 1px solid #1a1a1a !important;
+          box-shadow: none !important;
+        }
+
+        [data-theme="dark"] .orbit-hero-panel::before {
+          display: none !important;
+        }
+
+        [data-theme="dark"] .orbit-gradient-brand {
+          background: #ffffff !important;
+          -webkit-text-fill-color: #ffffff !important;
+          animation: none !important;
+        }
+
+        [data-theme="dark"] .orbit-chip-pill {
+          background: #111111 !important;
+          border-color: #222222 !important;
+          color: #cbd5e1 !important;
+          box-shadow: none !important;
+        }
+
+        [data-theme="dark"] .orbit-stat-card {
+          background: #080808 !important;
+          border-color: #1a1a1a !important;
+          box-shadow: none !important;
+        }
+
+        [data-theme="dark"] .orbit-stat-card:hover {
+          border-color: #333333 !important;
+        }
+
+        [data-theme="dark"] .orbit-bento-card {
+          background: #080808 !important;
+          border-color: #1a1a1a !important;
+          box-shadow: none !important;
+        }
+
+        [data-theme="dark"] .orbit-bento-card::before,
+        [data-theme="dark"] .orbit-bento-card::after {
+          display: none !important;
+        }
+
+        [data-theme="dark"] .orbit-bento-card:hover {
+          background: #121212 !important;
+          border-color: #333333 !important;
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.9) !important;
+        }
+
+        [data-theme="dark"] .orbit-journey-card {
+          background: #080808 !important;
+          border-color: #1a1a1a !important;
+          box-shadow: none !important;
+        }
+
+        [data-theme="dark"] .orbit-journey-card:hover {
+          border-color: #333333 !important;
+        }
       `}</style>
 
       {/* Floating Animated Ambient Glow Orbs */}
@@ -606,20 +684,19 @@ export function Home({ systemStatus, setCurrentTab }) {
                 alignItems: 'center', 
                 justifyContent: 'center',
                 padding: '6px',
-                borderRadius: '16px',
-                background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.22) 0%, rgba(6, 182, 212, 0.18) 100%)',
-                border: '1px solid rgba(255, 255, 255, 0.18)',
-                boxShadow: '0 0 24px -2px rgba(168, 85, 247, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
-                backdropFilter: 'blur(16px)'
+                borderRadius: '12px',
+                background: 'rgba(255, 255, 255, 0.04)',
+                border: '1px solid var(--border-glass)',
+                boxShadow: 'none'
               }}>
-                <OrbitLogo size={42} animated={true} />
+                <OrbitLogo size={36} animated={false} />
               </div>
               <div className="orbit-chip-pill" style={{ marginBottom: 0 }}>
                 <span className="orbit-pulse-ping" />
-                <Sparkles size={14} color="var(--accent-violet-light)" />
-                <span>Next-Gen Autonomous AI Engineering Workstation</span>
+                <Sparkles size={14} color="var(--text-muted)" />
+                <span>Local AI Engineering Workstation</span>
                 <span style={{ opacity: 0.5, margin: '0 0.2rem' }}>•</span>
-                <span style={{ color: 'var(--text-main)', fontWeight: 700 }}>100% Local & Free</span>
+                <span style={{ color: 'var(--text-main)', fontWeight: 600 }}>100% Offline Capable</span>
               </div>
             </div>
 

@@ -7,20 +7,22 @@ import {
   Workflow, 
   Activity, 
   Settings, 
-  Layers,
-  Database,
-  Cpu,
-  Sparkles,
-  Terminal,
-  Home as HomeIcon,
-  Compass,
-  Boxes,
-  GraduationCap
+  Layers, 
+  Database, 
+  Cpu, 
+  Sparkles, 
+  Terminal, 
+  Home as HomeIcon, 
+  Compass, 
+  Boxes, 
+  GraduationCap,
+  Laptop
 } from 'lucide-react';
 
 export function Sidebar({ currentTab, setCurrentTab, systemStatus }) {
   const navItems = [
     { id: 'home', label: 'Home', icon: HomeIcon, color: 'var(--accent-violet)' },
+    { id: 'laptop-copilot', label: 'Laptop Copilot', icon: Laptop, color: 'var(--accent-teal)' },
     { id: 'user-guide', label: 'Start Here / Guide', icon: Compass, color: 'var(--accent-blue)' },
     { id: 'course-lab', label: 'Course-to-Code Lab', icon: GraduationCap, color: 'var(--accent-teal)' },
     { id: 'engineer', label: 'Software Engineer', icon: Terminal, color: 'var(--accent-indigo)' },
@@ -40,8 +42,8 @@ export function Sidebar({ currentTab, setCurrentTab, systemStatus }) {
     <aside className="sidebar">
       {/* Brand Header */}
       <div className="sidebar-header">
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', filter: 'drop-shadow(0 0 12px rgba(168, 85, 247, 0.45))' }}>
-          <OrbitLogo size={36} animated={true} />
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <OrbitLogo size={34} animated={false} />
         </div>
         <div className="brand-info">
           <div className="brand-title">
@@ -63,23 +65,23 @@ export function Sidebar({ currentTab, setCurrentTab, systemStatus }) {
               className={`nav-link ${isActive ? 'active' : ''}`}
               onClick={() => setCurrentTab(item.id)}
               style={isActive ? { 
-                borderColor: item.color, 
-                boxShadow: `0 4px 20px -2px ${item.color}40, inset 0 1px 0 rgba(255, 255, 255, 0.2)` 
+                borderColor: 'rgba(255, 255, 255, 0.15)', 
+                boxShadow: 'none' 
               } : {}}
             >
               <span 
                 className="nav-icon"
                 style={{ 
                   color: item.color,
-                  background: isActive ? `color-mix(in srgb, ${item.color} 24%, transparent)` : 'rgba(255, 255, 255, 0.04)',
-                  border: `1px solid ${isActive ? item.color : 'rgba(255, 255, 255, 0.08)'}`,
+                  background: isActive ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 255, 255, 0.03)',
+                  border: `1px solid ${isActive ? 'rgba(255, 255, 255, 0.12)' : 'rgba(255, 255, 255, 0.05)'}`,
                   padding: '5px',
                   borderRadius: '8px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  boxShadow: isActive ? `0 0 12px ${item.color}45` : 'none',
-                  transition: 'all 0.2s ease'
+                  boxShadow: 'none',
+                  transition: 'all 0.15s ease'
                 }}
               >
                 <Icon size={16} />

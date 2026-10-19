@@ -17,6 +17,7 @@ import learningRoutes from './routes/learningRoutes.js';
 import engineerRoutes from './routes/engineerRoutes.js';
 import modelRoutes from './routes/modelRoutes.js';
 import courseLabRoutes from './routes/courseLabRoutes.js';
+import systemRoutes from './routes/systemRoutes.js';
 
 export function createApp() {
   const app = express();
@@ -43,6 +44,7 @@ export function createApp() {
   app.use('/api/engineer', engineerRoutes);
   app.use('/api/models', modelRoutes);
   app.use('/api/course-lab', courseLabRoutes);
+  app.use('/api/system', systemRoutes);
 
   // 4. Global Error Handler
   app.use(errorHandler);

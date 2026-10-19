@@ -11,6 +11,7 @@ import SettingsHealth from './pages/SettingsHealth';
 import SoftwareEngineer from './pages/SoftwareEngineer';
 import ModelLibrary from './pages/ModelLibrary';
 import CourseLab from './pages/CourseLab';
+import LaptopCopilot from './pages/LaptopCopilot';
 import { api } from './services/api';
 import { 
   Home as HomeIcon,
@@ -29,7 +30,8 @@ import {
   Moon,
   Terminal,
   Boxes,
-  GraduationCap
+  GraduationCap,
+  Laptop
 } from 'lucide-react';
 
 export function App() {
@@ -63,8 +65,24 @@ export function App() {
 
   useEffect(() => {
     fetchHealth();
-    const interval = setInterval(fetchHealth, 15000);
-    return () => clearInterval(interval);
+    // Check health every 45s; skip when tab is hidden to conserve power and keep CPU idle
+    const interval = setInterval(() => {
+      if (!document.hidden) {
+        fetchHealth();
+      }
+    }, 45000);
+
+    const onVisible = () => {
+      if (!document.hidden) {
+        fetchHealth();
+      }
+    };
+    document.addEventListener('visibilitychange', onVisible);
+
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener('visibilitychange', onVisible);
+    };
   }, []);
 
   const tabConfig = {
@@ -73,6 +91,12 @@ export function App() {
       subtitle: 'Local-First AI Engineering, Learning Platform & Guided Hub',
       icon: HomeIcon,
       color: 'var(--accent-violet)'
+    },
+    'laptop-copilot': {
+      title: 'Autonomous Laptop Copilot & Privacy Shield',
+      subtitle: 'Power Management, Workload Shifting, Network Acceleration & Zero-Access Privacy Boundaries',
+      icon: Laptop,
+      color: 'var(--accent-teal)'
     },
     'user-guide': {
       title: 'Start Here: Complete User Guide',
@@ -227,6 +251,7 @@ export function App() {
         {/* Dynamic Page Container */}
         <section className="content-area">
           {currentTab === 'home' && <Home systemStatus={systemStatus} setCurrentTab={setCurrentTab} />}
+          {currentTab === 'laptop-copilot' && <LaptopCopilot systemStatus={systemStatus} />}
           {currentTab === 'user-guide' && <UserGuide setCurrentTab={setCurrentTab} />}
           {currentTab === 'course-lab' && <CourseLab systemStatus={systemStatus} />}
           {currentTab === 'engineer' && <SoftwareEngineer systemStatus={systemStatus} />}
